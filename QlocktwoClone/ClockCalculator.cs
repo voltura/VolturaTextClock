@@ -122,7 +122,7 @@ namespace QlocktwoClone
                     return "TIO";
                 case 11:
                 case 23:
-                    return "EVLA";
+                    return "ELVA";
                 case 12:
                 case 24:
                 case 0:
