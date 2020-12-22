@@ -30,7 +30,7 @@ namespace QlocktwoClone
             UpdateClockText();
         }
 
-        private string SaveImageToDisk()
+        private static string SaveImageToDisk()
         {
             var commonpath = GetFolderPath(SpecialFolder.CommonApplicationData);
             var path = Path.Combine(commonpath, "metal.jpg");
