@@ -1,6 +1,6 @@
 ﻿using System;
-using System.Windows.Forms;
 using System.IO;
+using System.Windows.Forms;
 
 namespace QlocktwoClone
 {
@@ -8,28 +8,44 @@ namespace QlocktwoClone
     {
         private const string CLOCK_TEXT_01 = @"FEMYISTIONI<BR>KVARTQIENZO<BR>TJUGOLIVIPM<BR>ÖVERKAMHALV<BR>";
         private const string CLOCK_TEXT_02 = @"ETTUSVLXTVÅ<BR>TREMYKYFYRA<BR>FEMSFLORSEX<BR>SJUÅTTAINIO<BR>TIOELVATOLV";
-        private System.Collections.Generic.List<string> m_TimeText01;
+        private System.Collections.Generic.List<string> m_TimeText;
         private string m_HourText;
         private int m_Location;
         private readonly string m_ImagePath;
 
         public QlocktwoCloneForm()
         {
-            using (var key = Microsoft.Win32.Registry.CurrentUser.OpenSubKey(
-    @"Software\Microsoft\Internet Explorer\Main\FeatureControl\FEATURE_BROWSER_EMULATION",
-    true))
-            {
-                var app = System.IO.Path.GetFileName(Application.ExecutablePath);
-                key.SetValue(app, 11001, Microsoft.Win32.RegistryValueKind.DWord);
-                key.Close();
-            }
+            SetBrowserEmulationToIE11();
             m_ImagePath = SaveImageToDisk();
             InitializeComponent();
+            moveBtn.MoveOtherWithMouse(this);
+            browser.SendToBack();
+        }
+
+        private static void SetBrowserEmulationToIE11()
+        {
+            using Microsoft.Win32.RegistryKey key = Microsoft.Win32.Registry.CurrentUser.OpenSubKey(
+    @"Software\Microsoft\Internet Explorer\Main\FeatureControl\FEATURE_BROWSER_EMULATION", true);
+            string app = Path.GetFileName(Application.ExecutablePath);
+            key.SetValue(app, 11001, Microsoft.Win32.RegistryValueKind.DWord);
+            key.Close();
         }
 
         private void QlocktwoCloneForm_Load(object sender, EventArgs e)
         {
             UpdateClockText();
+        }
+
+        private void PicBox_Click(object sender, EventArgs e)
+        {
+            ToogleButtons();
+        }
+
+        private void ToogleButtons()
+        {
+            closeBtn.Visible = !closeBtn.Visible;
+            moveBtn.Visible = !moveBtn.Visible;
+            minimizeBtn.Visible = !minimizeBtn.Visible;
         }
 
         private void ClockTimer_Tick(object sender, EventArgs e)
@@ -58,12 +74,12 @@ namespace QlocktwoClone
 
         private void UpdateClockText()
         {
-            m_TimeText01 = ClockCalculator.GetEvenFiveMinuteTimeNoHour();
+            m_TimeText = ClockCalculator.GetEvenFiveMinuteTimeNoHour();
             m_HourText = ClockCalculator.GetEvenFiveMinuteTimeHour();
             string qlockText01 = CLOCK_TEXT_01;
             string qlockText02 = CLOCK_TEXT_02;
 
-            foreach (string timePart in m_TimeText01)
+            foreach (string timePart in m_TimeText)
             {
                 m_Location = qlockText01.LastIndexOf(timePart);
                 if (m_Location >= 0)

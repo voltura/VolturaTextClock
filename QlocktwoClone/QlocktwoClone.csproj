@@ -13,13 +13,21 @@
     <ApplicationIcon>Resources\clock.ico</ApplicationIcon>
     <EnableNETAnalyzers>true</EnableNETAnalyzers>
     <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
-    <Version>1.0.1</Version>
+    <Version>1.0.2</Version>
   </PropertyGroup>
 
   <ItemGroup>
     <Compile Remove="Image\**" />
     <EmbeddedResource Remove="Image\**" />
     <None Remove="Image\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="Image\gear.bmp" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="Image\cogwheel.png" />
   </ItemGroup>
 
   <ItemGroup>
