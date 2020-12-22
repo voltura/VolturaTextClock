@@ -1,7 +1,6 @@
 ﻿using System;
-using System.IO;
 using System.Windows.Forms;
-using static System.Environment;
+using System.IO;
 
 namespace QlocktwoClone
 {
@@ -9,13 +8,21 @@ namespace QlocktwoClone
     {
         private const string CLOCK_TEXT_01 = @"FEMYISTIONI<BR>KVARTQIENZO<BR>TJUGOLIVIPM<BR>ÖVERKAMHALV<BR>";
         private const string CLOCK_TEXT_02 = @"ETTUSVLXTVÅ<BR>TREMYKYFYRA<BR>FEMSFLORSEX<BR>SJUÅTTAINIO<BR>TIOELVATOLV";
-        private string[] m_TimeText01;
+        private System.Collections.Generic.List<string> m_TimeText01;
         private string m_HourText;
         private int m_Location;
         private readonly string m_ImagePath;
 
         public QlocktwoCloneForm()
         {
+            using (var key = Microsoft.Win32.Registry.CurrentUser.OpenSubKey(
+    @"Software\Microsoft\Internet Explorer\Main\FeatureControl\FEATURE_BROWSER_EMULATION",
+    true))
+            {
+                var app = System.IO.Path.GetFileName(Application.ExecutablePath);
+                key.SetValue(app, 11001, Microsoft.Win32.RegistryValueKind.DWord);
+                key.Close();
+            }
             m_ImagePath = SaveImageToDisk();
             InitializeComponent();
         }
@@ -32,11 +39,16 @@ namespace QlocktwoClone
 
         private static string SaveImageToDisk()
         {
-            var commonpath = GetFolderPath(SpecialFolder.CommonApplicationData);
-            var path = Path.Combine(commonpath, "metal.jpg");
+            string path = Path.Combine(Path.GetTempPath(), "metal.jpg");
+            
             try
             {
-                Properties.Resources.metalBackground.Save(path);
+                if (File.Exists(path))
+                {
+                    File.SetAttributes(path, FileAttributes.Normal);
+                    File.Delete(path);
+                }
+                Properties.Resources.glossy_black.Save(path, System.Drawing.Imaging.ImageFormat.Jpeg);
             }
             catch
             {
@@ -56,15 +68,49 @@ namespace QlocktwoClone
                 m_Location = qlockText01.LastIndexOf(timePart);
                 if (m_Location >= 0)
                 {
-                    qlockText01 = qlockText01.Remove(m_Location, timePart.Length).Insert(m_Location, $"<b>{timePart}</b>");
+                    qlockText01 = qlockText01.Remove(m_Location, timePart.Length).Insert(m_Location, $"<span class='highlightedText'>{timePart}</span>");
                 }
             }
             m_Location = qlockText02.IndexOf(m_HourText);
             if (m_Location >= 0)
             {
-                qlockText02 = qlockText02.Remove(m_Location, m_HourText.Length).Insert(m_Location, $"<b>{m_HourText}</b>");
+                qlockText02 = qlockText02.Remove(m_Location, m_HourText.Length).Insert(m_Location, $"<span class='highlightedText'>{m_HourText}</span>");
             }
-            string htmlClock = @$"<html><body style='font-size: 35px; font-family: ""Courier New"", Courier, monospace;background-image: url(""file:///{m_ImagePath}"");'><DIV style='padding: 34px 44px 34px 44px;'><b>KLOCKAN</b>T<b>ÄR</b>K<BR>{qlockText01}{qlockText02}<DIV></body></html>";
+            string style = @"
+html,
+body {
+  position: relative;
+  margin: 0;
+  height: 100%;
+  font-size: 35px; 
+  font-family: 'Courier New', Courier, monospace;
+  background-image: url('file:///" + m_ImagePath + @"');
+  background-repeat: no-repeat;
+  background-size: auto;
+  color: #F8F8F8;
+  font-weight: normal;
+  letter-spacing: 0.4em;
+}
+div {
+  padding: 34px 44px 34px 44px;
+}
+.highlightedText {
+  color: white;
+  font-weight: bold;
+  text-shadow: 0 0 3px #FF0000, 0 0 5px #0000FF;
+}
+";
+            string htmlClock = @$"<!DOCTYPE html>
+<html>
+    <head>
+        <style type=""text/css"">
+            {style}
+        </style>
+    </head>
+    <body>
+        <div><span class='highlightedText'>KLOCKAN</span>T<span class='highlightedText'>ÄR</span>K<BR>{qlockText01}{qlockText02}</div>
+    </body>
+</html>";
             if (browser.DocumentText != htmlClock)
             {
                 browser.Navigate("about:blank");
@@ -77,6 +123,11 @@ namespace QlocktwoClone
         private void CloseBtn_Click(object sender, EventArgs e)
         {
             Application.Exit();
+        }
+
+        private void MinimizeBtn_Click(object sender, EventArgs e)
+        {
+            WindowState = FormWindowState.Minimized;
         }
     }
 }

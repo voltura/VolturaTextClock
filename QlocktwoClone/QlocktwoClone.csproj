@@ -13,12 +13,21 @@
     <ApplicationIcon>Resources\clock.ico</ApplicationIcon>
     <EnableNETAnalyzers>true</EnableNETAnalyzers>
     <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
+    <Version>1.0.1</Version>
   </PropertyGroup>
 
   <ItemGroup>
     <Compile Remove="Image\**" />
     <EmbeddedResource Remove="Image\**" />
     <None Remove="Image\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="Image\glossy_black.jpg" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="Image\scratched_and_scraped_metal_texture.jpg" />
   </ItemGroup>
 
   <ItemGroup>

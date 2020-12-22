@@ -73,9 +73,29 @@ namespace QlocktwoClone.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap glossy_black {
+            get {
+                object obj = ResourceManager.GetObject("glossy_black", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap metalBackground {
             get {
                 object obj = ResourceManager.GetObject("metalBackground", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap scratched_and_scraped_metal_texture {
+            get {
+                object obj = ResourceManager.GetObject("scratched_and_scraped_metal_texture", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

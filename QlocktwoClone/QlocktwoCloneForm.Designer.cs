@@ -34,6 +34,7 @@ namespace QlocktwoClone
             this.browser = new System.Windows.Forms.WebBrowser();
             this.clockTimer = new System.Windows.Forms.Timer(this.components);
             this.closeBtn = new System.Windows.Forms.Button();
+            this.minimizeBtn = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // browser
@@ -45,9 +46,8 @@ namespace QlocktwoClone
             this.browser.Location = new System.Drawing.Point(0, 0);
             this.browser.Margin = new System.Windows.Forms.Padding(0);
             this.browser.Name = "browser";
-            this.browser.ScriptErrorsSuppressed = true;
             this.browser.ScrollBarsEnabled = false;
-            this.browser.Size = new System.Drawing.Size(505, 844);
+            this.browser.Size = new System.Drawing.Size(659, 770);
             this.browser.TabIndex = 0;
             this.browser.WebBrowserShortcutsEnabled = false;
             // 
@@ -62,13 +62,30 @@ namespace QlocktwoClone
             this.closeBtn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.closeBtn.BackColor = System.Drawing.Color.Gray;
             this.closeBtn.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.closeBtn.Location = new System.Drawing.Point(403, 791);
+            this.closeBtn.Font = new System.Drawing.Font("Segoe UI", 8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            this.closeBtn.ForeColor = System.Drawing.Color.White;
+            this.closeBtn.Location = new System.Drawing.Point(589, 726);
             this.closeBtn.Name = "closeBtn";
-            this.closeBtn.Size = new System.Drawing.Size(90, 41);
+            this.closeBtn.Size = new System.Drawing.Size(68, 42);
             this.closeBtn.TabIndex = 1;
             this.closeBtn.Text = "&Close";
             this.closeBtn.UseVisualStyleBackColor = false;
             this.closeBtn.Click += new System.EventHandler(this.CloseBtn_Click);
+            // 
+            // minimizeBtn
+            // 
+            this.minimizeBtn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.minimizeBtn.BackColor = System.Drawing.Color.Gray;
+            this.minimizeBtn.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.minimizeBtn.Font = new System.Drawing.Font("Segoe UI", 8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            this.minimizeBtn.ForeColor = System.Drawing.Color.White;
+            this.minimizeBtn.Location = new System.Drawing.Point(515, 726);
+            this.minimizeBtn.Name = "minimizeBtn";
+            this.minimizeBtn.Size = new System.Drawing.Size(68, 42);
+            this.minimizeBtn.TabIndex = 2;
+            this.minimizeBtn.Text = "&Hide";
+            this.minimizeBtn.UseVisualStyleBackColor = false;
+            this.minimizeBtn.Click += new System.EventHandler(this.MinimizeBtn_Click);
             // 
             // QlocktwoCloneForm
             // 
@@ -76,8 +93,9 @@ namespace QlocktwoClone
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.Red;
             this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
-            this.ClientSize = new System.Drawing.Size(505, 844);
+            this.ClientSize = new System.Drawing.Size(659, 770);
             this.ControlBox = false;
+            this.Controls.Add(this.minimizeBtn);
             this.Controls.Add(this.closeBtn);
             this.Controls.Add(this.browser);
             this.DoubleBuffered = true;
@@ -96,6 +114,7 @@ namespace QlocktwoClone
         private System.Windows.Forms.WebBrowser browser;
         private System.Windows.Forms.Timer clockTimer;
         private System.Windows.Forms.Button closeBtn;
+        private System.Windows.Forms.Button minimizeBtn;
     }
 }
 
