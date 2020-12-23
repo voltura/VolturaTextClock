@@ -40,6 +40,7 @@ namespace QlocktwoClone
         {
             moveBtn.MoveOtherWithMouse(this);
             browser.SendToBack();
+            ((Control)browser).Enabled = false;
             picBox.Image = picBox.BackgroundImage = Properties.Resources.gear;
             picBox.BackgroundImageLayout = ImageLayout.Zoom;
             closeBtn.TextAlign = minimizeBtn.TextAlign = moveBtn.TextAlign = System.Drawing.ContentAlignment.TopCenter;
@@ -52,9 +53,7 @@ namespace QlocktwoClone
 
         private void ToogleButtons()
         {
-            closeBtn.Visible = !closeBtn.Visible;
-            moveBtn.Visible = !moveBtn.Visible;
-            minimizeBtn.Visible = !minimizeBtn.Visible;
+            pinBtn.Visible = closeBtn.Visible = moveBtn.Visible = minimizeBtn.Visible = !minimizeBtn.Visible;
         }
 
         private void ClockTimer_Tick(object sender, EventArgs e)
@@ -183,6 +182,12 @@ div {
         private void Browser_DocumentCompleted(object sender, WebBrowserDocumentCompletedEventArgs e)
         {
             StartTimerAndShowBrowser();
+        }
+
+        private void PinBtn_Click(object sender, EventArgs e)
+        {
+            TopMost = !TopMost;
+            pinBtn.Text = TopMost ? "Unpin" : "Pin";
         }
     }
 }
