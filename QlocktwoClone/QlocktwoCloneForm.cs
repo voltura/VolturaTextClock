@@ -26,8 +26,8 @@ namespace QlocktwoClone
         {
             using Microsoft.Win32.RegistryKey key = Microsoft.Win32.Registry.CurrentUser.OpenSubKey(
     @"Software\Microsoft\Internet Explorer\Main\FeatureControl\FEATURE_BROWSER_EMULATION", true);
-            string app = Path.GetFileName(Application.ExecutablePath);
-            key.SetValue(app, 11001, Microsoft.Win32.RegistryValueKind.DWord);
+            string app = AppDomain.CurrentDomain.FriendlyName;// Path.GetFileName(Application.ExecutablePath);
+            key.SetValue(app, 11000, Microsoft.Win32.RegistryValueKind.DWord);
             key.Close();
         }
 
@@ -113,7 +113,7 @@ body {
   background-repeat: no-repeat;
   background-size: auto;
   color: #F8F8F8;
-background-color: #000000;
+  background-color: #000000;
   font-weight: normal;
   letter-spacing: 0.4em;
 }
@@ -121,14 +121,21 @@ div {
   padding: 34px 44px 34px 44px;
 }
 .highlightedText {
-  color: white;
+  color: #FFFFF9;
   font-weight: bold;
-  text-shadow: 0 0 3px #FF0000, 0 0 5px #0000FF;
+  text-shadow: 0 0 4px #FFFFFF;
+// #FFFFFF; #82CAFA
+//, 0 0 2px #F8F8F8;
+}
+body {
+  background-color: #000000;
+
 }
 ";
             string htmlClock = @$"<!DOCTYPE html>
 <html>
     <head>
+        <meta http-equiv=""X-UA-Compatible"" content=""IE=11""/>
         <style type=""text/css"">
             {style}
         </style>
