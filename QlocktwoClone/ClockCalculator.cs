@@ -7,42 +7,39 @@ namespace QlocktwoClone
     {
         public static List<string> GetEvenFiveMinuteTimeNoHour()
         {
-            DateTime exactTime = DateTime.Now;
-            int min = 5 * (int)Math.Round(exactTime.Minute / 5.0);
+            int minute = 5 * (int)Math.Round(DateTime.Now.Minute / 5.0);
             List<string> timeList = new List<string>();
 
-            if (min == 0 || min == 60) // no minutes
+            if (minute == 0 || minute == 60) // no minutes
             {
                 return timeList;
             }
-
-            if (min <= 20) // (min) över hour
+            if (minute <= 20) // (min) över hour
             {
-                timeList.Add(GetMin(min));
+                timeList.Add(GetMin(minute));
                 timeList.Add("ÖVER");
             }
-            else if (min == 25) // fem i halv (hour + 1)
+            else if (minute == 25) // fem i halv (hour + 1)
             {
                 timeList.Add(GetMin(5));
                 timeList.Add("I");
                 timeList.Add("HALV");
             }
-            else if (min == 30) // halv (hour + 1)
+            else if (minute == 30) // halv (hour + 1)
             {
                 timeList.Add("HALV");
             }
-            else if (min == 35) // fem över halv (hour + 1)
+            else if (minute == 35) // fem över halv (hour + 1)
             {
                 timeList.Add(GetMin(5));
                 timeList.Add("ÖVER");
                 timeList.Add("HALV");
             }
-            else if (min > 35) // (min) i (hour + 1)
+            else if (minute > 35) // (min) i (hour + 1)
             {
-                timeList.Add(GetMin(min));
+                timeList.Add(GetMin(minute));
                 timeList.Add("I");
             }
-
             return timeList;
         }
 
@@ -68,21 +65,19 @@ namespace QlocktwoClone
         {
             switch (min)
             {
-                case 5:
-                case 25:
-                case 35:
-                case 55:
-                    return "FEM";
                 case 10:
                 case 50:
                     return "TIO";
                 case 15:
                 case 45:
                     return "KVART";
+                case 20:
+                case 40:
+                    return "TJUGO";
                 case 30:
                     return "HALV";
                 default:
-                    return "TJUGO";
+                    return "FEM";
             }
         }
 
@@ -123,9 +118,6 @@ namespace QlocktwoClone
                 case 11:
                 case 23:
                     return "ELVA";
-                case 12:
-                case 24:
-                case 0:
                 default:
                     return "TOLV";
             }

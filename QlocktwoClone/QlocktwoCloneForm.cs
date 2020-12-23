@@ -12,14 +12,14 @@ namespace QlocktwoClone
         private string m_HourText;
         private int m_Location;
         private readonly string m_ImagePath;
+        private string m_OldHtmlClock = string.Empty;
 
         public QlocktwoCloneForm()
         {
             SetBrowserEmulationToIE11();
             m_ImagePath = SaveImageToDisk();
             InitializeComponent();
-            moveBtn.MoveOtherWithMouse(this);
-            browser.SendToBack();
+            UpdateUI();
         }
 
         private static void SetBrowserEmulationToIE11()
@@ -36,6 +36,15 @@ namespace QlocktwoClone
             UpdateClockText();
         }
 
+        private void UpdateUI()
+        {
+            moveBtn.MoveOtherWithMouse(this);
+            browser.SendToBack();
+            picBox.Image = picBox.BackgroundImage = Properties.Resources.gear;
+            picBox.BackgroundImageLayout = ImageLayout.Zoom;
+            closeBtn.TextAlign = minimizeBtn.TextAlign = moveBtn.TextAlign = System.Drawing.ContentAlignment.TopCenter;
+        }
+
         private void PicBox_Click(object sender, EventArgs e)
         {
             ToogleButtons();
@@ -50,6 +59,7 @@ namespace QlocktwoClone
 
         private void ClockTimer_Tick(object sender, EventArgs e)
         {
+            clockTimer.Stop();
             UpdateClockText();
         }
 
@@ -104,6 +114,7 @@ body {
   background-repeat: no-repeat;
   background-size: auto;
   color: #F8F8F8;
+background-color: #000000;
   font-weight: normal;
   letter-spacing: 0.4em;
 }
@@ -127,12 +138,30 @@ div {
         <div><span class='highlightedText'>KLOCKAN</span>T<span class='highlightedText'>ÄR</span>K<BR>{qlockText01}{qlockText02}</div>
     </body>
 </html>";
-            if (browser.DocumentText != htmlClock)
+            StartTimerAndShowBrowser();
+            if (m_OldHtmlClock != htmlClock)
             {
+                m_OldHtmlClock = htmlClock;
                 browser.Navigate("about:blank");
-                browser.Document.OpenNew(false);
+                if (browser.Document == null)
+                {
+                    browser.Document.OpenNew(true);
+                }
                 browser.Document.Write(htmlClock);
                 browser.Refresh();
+            }            
+        }
+
+        private void StartTimerAndShowBrowser()
+        {
+            if (browser.Visible == false)
+            {
+                browser.Visible = true;
+            }
+            if (!clockTimer.Enabled)
+            {
+                clockTimer.Interval = 60000 - DateTime.Now.Millisecond;
+                clockTimer.Start();
             }
         }
 
@@ -144,6 +173,16 @@ div {
         private void MinimizeBtn_Click(object sender, EventArgs e)
         {
             WindowState = FormWindowState.Minimized;
+        }
+
+        private void Browser_Navigating(object sender, WebBrowserNavigatingEventArgs e)
+        {
+            browser.Visible = false;
+        }
+
+        private void Browser_DocumentCompleted(object sender, WebBrowserDocumentCompletedEventArgs e)
+        {
+            StartTimerAndShowBrowser();
         }
     }
 }
