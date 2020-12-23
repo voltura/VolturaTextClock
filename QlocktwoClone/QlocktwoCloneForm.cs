@@ -124,8 +124,6 @@ div {
   color: #FFFFF9;
   font-weight: bold;
   text-shadow: 0 0 4px #FFFFFF;
-// #FFFFFF; #82CAFA
-//, 0 0 2px #F8F8F8;
 }
 body {
   background-color: #000000;
