@@ -14,7 +14,6 @@ namespace QlocktwoClone
             {
                 if (m_MouseDown)
                 {
-                    //movedObject.Location = new System.Drawing.Point(movedObject.Location.X - m_LastLocation.X + e.X, movedObject.Location.Y - m_LastLocation.Y + e.Y);
                     movedObject.Left = movedObject.Location.X - m_LastLocation.X + e.X;
                     movedObject.Top = movedObject.Location.Y - m_LastLocation.Y + e.Y;
                     movedObject.Update();

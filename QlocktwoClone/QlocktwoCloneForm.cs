@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Windows.Forms;
+using static QlocktwoClone.Program;
 
 namespace QlocktwoClone
 {
@@ -13,15 +14,39 @@ namespace QlocktwoClone
         private int m_Location;
         private readonly string m_ImagePath;
         private string m_OldHtmlClock = string.Empty;
+        private SettingsForm m_SettingsForm;
 
         public QlocktwoCloneForm()
         {
             SetBrowserEmulationToIE11();
             m_ImagePath = SaveImageToDisk();
             InitializeComponent();
+            Visible = false;
             UpdateUI();
         }
 
+        private void SetFormLocationFromSettings()
+        {
+            string formLocation = AppConfig.GetValue<string>("mainFormLocation", "40,40");
+            string[] formLeftAndTop = formLocation.Split(new char[] { ',' });
+            if (formLeftAndTop.Length == 2)
+            {
+                Location = new System.Drawing.Point(Convert.ToInt32(formLeftAndTop[0]), Convert.ToInt32(formLeftAndTop[1]));
+            }
+        }
+
+        public SettingsForm ApplicationSettingsForm
+        {
+            get
+            {
+                if (m_SettingsForm == null)
+                {
+                    m_SettingsForm = new SettingsForm();
+                }
+                return m_SettingsForm;
+            }
+            set => m_SettingsForm = value;
+        }
         private static void SetBrowserEmulationToIE11()
         {
             using Microsoft.Win32.RegistryKey key = Microsoft.Win32.Registry.CurrentUser.OpenSubKey(
@@ -34,26 +59,68 @@ namespace QlocktwoClone
         private void QlocktwoCloneForm_Load(object sender, EventArgs e)
         {
             UpdateClockText();
+            SetFormLocationFromSettings();
+            TopMost = AppConfig.GetValue("alwaysOnTop", false);
+            pinBtn.Text = TopMost ? "Unpin" : "Pin";
+
+            Visible = true;
         }
 
         private void UpdateUI()
         {
             moveBtn.MoveOtherWithMouse(this);
+            Controls.SetChildIndex(settingsPicBox, 0);
+            Controls.SetChildIndex(optionsPicBox, 0);
             browser.SendToBack();
             ((Control)browser).Enabled = false;
-            picBox.Image = picBox.BackgroundImage = Properties.Resources.gear;
-            picBox.BackgroundImageLayout = ImageLayout.Zoom;
+            Controls.SetChildIndex(browser, 10);
+            optionsPicBox.Image = optionsPicBox.BackgroundImage = Properties.Resources.options;
+            optionsPicBox.BackgroundImageLayout = ImageLayout.Zoom;
+            settingsPicBox.Image = optionsPicBox.BackgroundImage = Properties.Resources.gear;
+            settingsPicBox.BackgroundImageLayout = ImageLayout.Zoom;
             closeBtn.TextAlign = minimizeBtn.TextAlign = moveBtn.TextAlign = System.Drawing.ContentAlignment.TopCenter;
         }
 
-        private void PicBox_Click(object sender, EventArgs e)
+        private void OptionsPicBox_Click(object sender, EventArgs e)
         {
             ToogleButtons();
         }
 
+        private void SettingsPicBox_Click(object sender, EventArgs e)
+        {
+            ShowSettingsForm();
+        }
+
+        private void CloseSettingsForm()
+        {
+            if (ApplicationSettingsForm.WindowState != FormWindowState.Normal ||
+                !ApplicationSettingsForm.Visible)
+            {
+                return;
+            }
+
+            ApplicationSettingsForm.Visible = false;
+            ApplicationSettingsForm.Close();
+        }
+
+        private void ShowSettingsForm()
+        {
+            Log.Info = "Displayed settings form";
+            if (ApplicationSettingsForm.Visible)
+            {
+                ApplicationSettingsForm.BringToFront();
+                ApplicationSettingsForm.Focus();
+            }
+            else
+            {
+                ApplicationSettingsForm.ShowDialog(this);
+            }
+        }
+
         private void ToogleButtons()
         {
-            pinBtn.Visible = closeBtn.Visible = moveBtn.Visible = minimizeBtn.Visible = !minimizeBtn.Visible;
+            settingsPicBox.Visible = pinBtn.Visible = closeBtn.Visible = moveBtn.Visible = minimizeBtn.Visible = !minimizeBtn.Visible;
+            browser.SendToBack();
         }
 
         private void ClockTimer_Tick(object sender, EventArgs e)
@@ -75,8 +142,9 @@ namespace QlocktwoClone
                 }
                 Properties.Resources.glossy_black.Save(path, System.Drawing.Imaging.ImageFormat.Jpeg);
             }
-            catch
+            catch (Exception ex)
             {
+                Log.Error = ex;
             }
             return path.Replace('\\', '/');
         }
@@ -127,7 +195,6 @@ div {
 }
 body {
   background-color: #000000;
-
 }
 ";
             string htmlClock = @$"<!DOCTYPE html>
@@ -171,12 +238,17 @@ body {
 
         private void CloseBtn_Click(object sender, EventArgs e)
         {
-            Application.Exit();
+            if (DialogResult.Yes == MessageBox.Show(this, "Do you want to close the application?", 
+                "Close application", MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1))
+            {
+                Application.Exit();
+            }
         }
 
         private void MinimizeBtn_Click(object sender, EventArgs e)
         {
             WindowState = FormWindowState.Minimized;
+            ToogleButtons();
         }
 
         private void Browser_Navigating(object sender, WebBrowserNavigatingEventArgs e)
@@ -193,6 +265,13 @@ body {
         {
             TopMost = !TopMost;
             pinBtn.Text = TopMost ? "Unpin" : "Pin";
+            AppConfig.AddOrUpdateAppSetting("alwaysOnTop", TopMost);
+            ToogleButtons();
+        }
+
+        private void QlocktwoCloneForm_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            AppConfig.AddOrUpdateAppSetting("mainFormLocation", $"{Location.X},{Location.Y}");
         }
     }
 }
