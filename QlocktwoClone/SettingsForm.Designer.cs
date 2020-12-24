@@ -54,7 +54,7 @@ namespace QlocktwoClone
             | System.Windows.Forms.AnchorStyles.Right)));
             this.settingsPanel.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(73)))), ((int)(((byte)(76)))), ((int)(((byte)(76)))));
             this.settingsPanel.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("settingsPanel.BackgroundImage")));
-            this.settingsPanel.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.settingsPanel.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
             this.settingsPanel.Controls.Add(this.btnSave);
             this.settingsPanel.Controls.Add(this.chkStartWithWindows);
             this.settingsPanel.Controls.Add(this.chkAlwaysOnTop);
