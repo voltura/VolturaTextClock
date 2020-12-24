@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Runtime.Versioning;
 using System.Windows.Forms;
 using static QlocktwoClone.Program;
 
@@ -31,7 +32,12 @@ namespace QlocktwoClone
             string[] formLeftAndTop = formLocation.Split(new char[] { ',' });
             if (formLeftAndTop.Length == 2)
             {
-                Location = new System.Drawing.Point(Convert.ToInt32(formLeftAndTop[0]), Convert.ToInt32(formLeftAndTop[1]));
+                int tmpLeft = Convert.ToInt32(formLeftAndTop[0]);
+                int tmpTop = Convert.ToInt32(formLeftAndTop[1]);
+                if (tmpTop >= 0)
+                {
+                    Location = new System.Drawing.Point(tmpLeft, tmpTop);
+                }
             }
         }
 
@@ -47,11 +53,13 @@ namespace QlocktwoClone
             }
             set => m_SettingsForm = value;
         }
+
+        [SupportedOSPlatform("windows")]
         private static void SetBrowserEmulationToIE11()
         {
             using Microsoft.Win32.RegistryKey key = Microsoft.Win32.Registry.CurrentUser.OpenSubKey(
     @"Software\Microsoft\Internet Explorer\Main\FeatureControl\FEATURE_BROWSER_EMULATION", true);
-            string app = AppDomain.CurrentDomain.FriendlyName;// Path.GetFileName(Application.ExecutablePath);
+            string app = AppDomain.CurrentDomain.FriendlyName;
             key.SetValue(app, 11000, Microsoft.Win32.RegistryValueKind.DWord);
             key.Close();
         }
@@ -62,7 +70,6 @@ namespace QlocktwoClone
             SetFormLocationFromSettings();
             TopMost = AppConfig.GetValue("alwaysOnTop", false);
             pinBtn.Text = TopMost ? "Unpin" : "Pin";
-
             Visible = true;
         }
 
@@ -113,7 +120,14 @@ namespace QlocktwoClone
             }
             else
             {
+                if (TopMost)
+                {
+                    Visible = false;
+                }
                 ApplicationSettingsForm.ShowDialog(this);
+                Visible = true;
+                TopMost = AppConfig.GetValue("alwaysOnTop", false);
+                pinBtn.Text = TopMost ? "Unpin" : "Pin";
             }
         }
 
@@ -271,7 +285,10 @@ body {
 
         private void QlocktwoCloneForm_FormClosing(object sender, FormClosingEventArgs e)
         {
-            AppConfig.AddOrUpdateAppSetting("mainFormLocation", $"{Location.X},{Location.Y}");
+            if (Location.X >= 0)
+            {
+                AppConfig.AddOrUpdateAppSetting("mainFormLocation", $"{Location.X},{Location.Y}");
+            }
         }
     }
 }

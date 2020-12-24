@@ -205,7 +205,7 @@ namespace QlocktwoClone
             ((System.ComponentModel.ISupportInitialize)(this.optionsPicBox)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.settingsPicBox)).EndInit();
             this.ResumeLayout(false);
-            this.PerformLayout();
+
         }
 
         #endregion
