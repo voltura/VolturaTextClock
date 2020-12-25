@@ -75,7 +75,8 @@ namespace QlocktwoClone
 
         private void UpdateUI()
         {
-            moveBtn.MoveOtherWithMouse(this);
+            Controls.SetChildIndex(panel1, 9);
+            panel1.MoveOtherWithMouse(this);
             Controls.SetChildIndex(settingsPicBox, 0);
             Controls.SetChildIndex(optionsPicBox, 0);
             browser.SendToBack();
@@ -85,7 +86,7 @@ namespace QlocktwoClone
             optionsPicBox.BackgroundImageLayout = ImageLayout.Zoom;
             settingsPicBox.Image = optionsPicBox.BackgroundImage = Properties.Resources.gear;
             settingsPicBox.BackgroundImageLayout = ImageLayout.Zoom;
-            closeBtn.TextAlign = minimizeBtn.TextAlign = moveBtn.TextAlign = System.Drawing.ContentAlignment.TopCenter;
+            closeBtn.TextAlign = minimizeBtn.TextAlign = System.Drawing.ContentAlignment.TopCenter;
         }
 
         private void OptionsPicBox_Click(object sender, EventArgs e)
@@ -133,7 +134,7 @@ namespace QlocktwoClone
 
         private void ToogleButtons()
         {
-            settingsPicBox.Visible = pinBtn.Visible = closeBtn.Visible = moveBtn.Visible = minimizeBtn.Visible = !minimizeBtn.Visible;
+            settingsPicBox.Visible = pinBtn.Visible = closeBtn.Visible = minimizeBtn.Visible = !minimizeBtn.Visible;
             browser.SendToBack();
         }
 

@@ -1,5 +1,5 @@
 ﻿
-using System;
+using QlocktwoClone.Forms.Controls;
 
 namespace QlocktwoClone
 {
@@ -37,11 +37,11 @@ namespace QlocktwoClone
             this.clockTimer = new System.Windows.Forms.Timer(this.components);
             this.closeBtn = new System.Windows.Forms.Button();
             this.minimizeBtn = new System.Windows.Forms.Button();
-            this.moveBtn = new System.Windows.Forms.Button();
             this.optionsPicBox = new System.Windows.Forms.PictureBox();
             this.useTip = new System.Windows.Forms.ToolTip(this.components);
             this.settingsPicBox = new System.Windows.Forms.PictureBox();
             this.pinBtn = new System.Windows.Forms.Button();
+            this.panel1 = new TransparentPanel();
             ((System.ComponentModel.ISupportInitialize)(this.optionsPicBox)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.settingsPicBox)).BeginInit();
             this.SuspendLayout();
@@ -109,25 +109,6 @@ namespace QlocktwoClone
             this.minimizeBtn.Visible = false;
             this.minimizeBtn.Click += new System.EventHandler(this.MinimizeBtn_Click);
             // 
-            // moveBtn
-            // 
-            this.moveBtn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.moveBtn.BackColor = System.Drawing.Color.Gray;
-            this.moveBtn.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.moveBtn.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.moveBtn.Font = new System.Drawing.Font("Segoe UI", 8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.moveBtn.ForeColor = System.Drawing.Color.White;
-            this.moveBtn.Location = new System.Drawing.Point(147, 433);
-            this.moveBtn.Margin = new System.Windows.Forms.Padding(4);
-            this.moveBtn.Name = "moveBtn";
-            this.moveBtn.Size = new System.Drawing.Size(86, 38);
-            this.moveBtn.TabIndex = 3;
-            this.moveBtn.Text = "Move";
-            this.moveBtn.TextAlign = System.Drawing.ContentAlignment.TopCenter;
-            this.useTip.SetToolTip(this.moveBtn, "Press and hold then move mouse to move clock");
-            this.moveBtn.UseVisualStyleBackColor = false;
-            this.moveBtn.Visible = false;
-            // 
             // optionsPicBox
             // 
             this.optionsPicBox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
@@ -177,22 +158,31 @@ namespace QlocktwoClone
             this.pinBtn.Visible = false;
             this.pinBtn.Click += new System.EventHandler(this.PinBtn_Click);
             // 
+            // panel1
+            // 
+            this.panel1.BackColor = System.Drawing.Color.Transparent;
+            this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.panel1.Location = new System.Drawing.Point(0, 0);
+            this.panel1.Name = "panel1";
+            this.panel1.Size = new System.Drawing.Size(464, 484);
+            this.panel1.TabIndex = 8;
+            // 
             // QlocktwoCloneForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(13F, 32F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.Black;
             this.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("$this.BackgroundImage")));
-            this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
             this.ClientSize = new System.Drawing.Size(464, 484);
             this.ControlBox = false;
             this.Controls.Add(this.pinBtn);
-            this.Controls.Add(this.moveBtn);
             this.Controls.Add(this.minimizeBtn);
             this.Controls.Add(this.closeBtn);
-            this.Controls.Add(this.browser);
             this.Controls.Add(this.optionsPicBox);
             this.Controls.Add(this.settingsPicBox);
+            this.Controls.Add(this.panel1);
+            this.Controls.Add(this.browser);
             this.DoubleBuffered = true;
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
@@ -214,11 +204,11 @@ namespace QlocktwoClone
         private System.Windows.Forms.Timer clockTimer;
         private System.Windows.Forms.Button closeBtn;
         private System.Windows.Forms.Button minimizeBtn;
-        private System.Windows.Forms.Button moveBtn;
         private System.Windows.Forms.PictureBox optionsPicBox;
         private System.Windows.Forms.PictureBox settingsPicBox;
         private System.Windows.Forms.ToolTip useTip;
         private System.Windows.Forms.Button pinBtn;
+        private TransparentPanel panel1;
     }
 }
 
