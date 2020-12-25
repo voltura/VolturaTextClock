@@ -5,7 +5,7 @@ using System.Windows.Forms;
 
 #endregion
 
-namespace QlocktwoClone.Forms.Controls
+namespace VolturaTextClock.Forms.Controls
 {
     /// <summary>
     ///     Customize menu item selected colors

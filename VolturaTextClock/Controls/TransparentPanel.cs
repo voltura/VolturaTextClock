@@ -1,6 +1,6 @@
 using System.Windows.Forms;
 
-namespace QlocktwoClone.Forms.Controls
+namespace VolturaTextClock.Forms.Controls
 {
     /// <summary>
     /// A transparent control.

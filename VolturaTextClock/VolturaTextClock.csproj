@@ -4,18 +4,18 @@
     <OutputType>WinExe</OutputType>
     <TargetFramework>net5.0-windows</TargetFramework>
     <UseWindowsForms>true</UseWindowsForms>
-    <RootNamespace>QlocktwoClone</RootNamespace>
-    <StartupObject>QlocktwoClone.Program</StartupObject>
+    <RootNamespace>VolturaTextClock</RootNamespace>
+    <StartupObject>VolturaTextClock.Program</StartupObject>
     <Authors>Joakim Skoglund</Authors>
     <Company>Voltura AB</Company>
-    <Description>A clone of Qlocktwo clock in Swedish as a Windows Forms application</Description>
+    <Description>A Windows application that displays time as text</Description>
     <Copyright>Copyright 2020 Voltura AB</Copyright>
-    <ApplicationIcon>QlocktwoClone.ico</ApplicationIcon>
+    <ApplicationIcon>VolturaTextClock.ico</ApplicationIcon>
     <EnableNETAnalyzers>true</EnableNETAnalyzers>
     <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
     <Version>1.0.5</Version>
     <ApplicationManifest>Properties\app.manifest</ApplicationManifest>
-    <PackageIcon>QLockClone.png</PackageIcon>
+    <PackageIcon></PackageIcon>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
@@ -34,10 +34,6 @@
     <None Remove="Image\**" />
     <None Include="..\.editorconfig" Link=".editorconfig" />
     <None Include="Image\options.png" />
-    <None Include="Image\QLockClone.png">
-      <Pack>True</Pack>
-      <PackagePath></PackagePath>
-    </None>
   </ItemGroup>
 
   <ItemGroup>

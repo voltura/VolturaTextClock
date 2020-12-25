@@ -1,9 +1,9 @@
 ﻿
-using QlocktwoClone.Forms.Controls;
+using VolturaTextClock.Forms.Controls;
 
-namespace QlocktwoClone
+namespace VolturaTextClock
 {
-    partial class QlocktwoCloneForm
+    partial class VolturaTextClockForm
     {
         /// <summary>
         ///  Required designer variable.
@@ -32,7 +32,7 @@ namespace QlocktwoClone
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(QlocktwoCloneForm));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(VolturaTextClockForm));
             this.browser = new System.Windows.Forms.WebBrowser();
             this.clockTimer = new System.Windows.Forms.Timer(this.components);
             this.closeBtn = new System.Windows.Forms.Button();
@@ -167,7 +167,7 @@ namespace QlocktwoClone
             this.panel1.Size = new System.Drawing.Size(464, 484);
             this.panel1.TabIndex = 8;
             // 
-            // QlocktwoCloneForm
+            // VolturaTextClockForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(13F, 32F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -187,11 +187,11 @@ namespace QlocktwoClone
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Margin = new System.Windows.Forms.Padding(4);
-            this.Name = "QlocktwoCloneForm";
-            this.Text = "Qlocktwo Clone";
+            this.Name = "VolturaTextClockForm";
+            this.Text = "VolturaTextClock";
             this.TransparencyKey = System.Drawing.Color.DarkGray;
-            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.QlocktwoCloneForm_FormClosing);
-            this.Load += new System.EventHandler(this.QlocktwoCloneForm_Load);
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.VolturaTextClockForm_FormClosing);
+            this.Load += new System.EventHandler(this.VolturaTextClockForm_Load);
             ((System.ComponentModel.ISupportInitialize)(this.optionsPicBox)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.settingsPicBox)).EndInit();
             this.ResumeLayout(false);

@@ -5,11 +5,11 @@ using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Windows.Forms;
-using static QlocktwoClone.Program;
+using static VolturaTextClock.Program;
 
 #endregion
 
-namespace QlocktwoClone
+namespace VolturaTextClock
 {
     /// <summary>
     ///     Application log
@@ -159,7 +159,7 @@ namespace QlocktwoClone
         /// </summary>
         internal static Exception Error
         {
-            private get => new ArgumentNullException("QlocktwoClone");
+            private get => new ArgumentNullException("VolturaTextClock");
             set
             {
                 try
@@ -181,7 +181,7 @@ namespace QlocktwoClone
         internal static string ErrorString
         {
             // ReSharper disable once UnusedMember.Local
-            private get => "QlocktwoClone";
+            private get => "VolturaTextClock";
             set => Trace.TraceError("{0} {1}",
                     DateTime.Now.ToString("yyyy-MM-dd hh:mm:ss.fff", CultureInfo.InvariantCulture),
                     value);

@@ -1,6 +1,6 @@
 ﻿using Newtonsoft.Json;
 
-namespace QlocktwoClone
+namespace VolturaTextClock
 {
     public class Root
     {

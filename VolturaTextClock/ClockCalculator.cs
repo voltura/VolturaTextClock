@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace QlocktwoClone
+namespace VolturaTextClock
 {
     internal static class ClockCalculator
     {

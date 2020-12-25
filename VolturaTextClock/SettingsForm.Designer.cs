@@ -1,8 +1,8 @@
 ﻿using System.ComponentModel;
 using System.Windows.Forms;
-using QlocktwoClone.Forms.Controls;
+using VolturaTextClock.Forms.Controls;
 
-namespace QlocktwoClone
+namespace VolturaTextClock
 {
     partial class SettingsForm
     {

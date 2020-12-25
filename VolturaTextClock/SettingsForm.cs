@@ -1,14 +1,14 @@
 ﻿#region Using statements
 
-using QlocktwoClone.Properties;
+using VolturaTextClock.Properties;
 using System;
 using System.Drawing;
 using System.Windows.Forms;
-using static QlocktwoClone.Program;
+using static VolturaTextClock.Program;
 
 #endregion
 
-namespace QlocktwoClone
+namespace VolturaTextClock
 {
     /// <summary>
     ///     Settings form

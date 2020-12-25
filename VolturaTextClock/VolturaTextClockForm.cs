@@ -2,11 +2,11 @@
 using System.IO;
 using System.Runtime.Versioning;
 using System.Windows.Forms;
-using static QlocktwoClone.Program;
+using static VolturaTextClock.Program;
 
-namespace QlocktwoClone
+namespace VolturaTextClock
 {
-    public partial class QlocktwoCloneForm : Form
+    public partial class VolturaTextClockForm : Form
     {
         private const string CLOCK_TEXT_01 = @"FEMYISTIONI<BR>KVARTQIENZO<BR>TJUGOLIVIPM<BR>ÖVERKAMHALV<BR>";
         private const string CLOCK_TEXT_02 = @"ETTUSVLXTVÅ<BR>TREMYKYFYRA<BR>FEMSFLORSEX<BR>SJUÅTTAINIO<BR>TIOELVATOLV";
@@ -17,7 +17,7 @@ namespace QlocktwoClone
         private string m_OldHtmlClock = string.Empty;
         private SettingsForm m_SettingsForm;
 
-        public QlocktwoCloneForm()
+        public VolturaTextClockForm()
         {
             SetBrowserEmulationToIE11();
             m_ImagePath = SaveImageToDisk();
@@ -64,7 +64,7 @@ namespace QlocktwoClone
             key.Close();
         }
 
-        private void QlocktwoCloneForm_Load(object sender, EventArgs e)
+        private void VolturaTextClockForm_Load(object sender, EventArgs e)
         {
             UpdateClockText();
             SetFormLocationFromSettings();
@@ -168,21 +168,21 @@ namespace QlocktwoClone
         {
             m_TimeText = ClockCalculator.GetEvenFiveMinuteTimeNoHour();
             m_HourText = ClockCalculator.GetEvenFiveMinuteTimeHour();
-            string qlockText01 = CLOCK_TEXT_01;
-            string qlockText02 = CLOCK_TEXT_02;
+            string clockText01 = CLOCK_TEXT_01;
+            string clockText02 = CLOCK_TEXT_02;
 
             foreach (string timePart in m_TimeText)
             {
-                m_Location = qlockText01.LastIndexOf(timePart);
+                m_Location = clockText01.LastIndexOf(timePart);
                 if (m_Location >= 0)
                 {
-                    qlockText01 = qlockText01.Remove(m_Location, timePart.Length).Insert(m_Location, $"<span class='highlightedText'>{timePart}</span>");
+                    clockText01 = clockText01.Remove(m_Location, timePart.Length).Insert(m_Location, $"<span class='highlightedText'>{timePart}</span>");
                 }
             }
-            m_Location = qlockText02.IndexOf(m_HourText);
+            m_Location = clockText02.IndexOf(m_HourText);
             if (m_Location >= 0)
             {
-                qlockText02 = qlockText02.Remove(m_Location, m_HourText.Length).Insert(m_Location, $"<span class='highlightedText'>{m_HourText}</span>");
+                clockText02 = clockText02.Remove(m_Location, m_HourText.Length).Insert(m_Location, $"<span class='highlightedText'>{m_HourText}</span>");
             }
             string style = @"
 html,
@@ -221,7 +221,7 @@ body {
         </style>
     </head>
     <body>
-        <div><span class='highlightedText'>KLOCKAN</span>T<span class='highlightedText'>ÄR</span>K<BR>{qlockText01}{qlockText02}</div>
+        <div><span class='highlightedText'>KLOCKAN</span>T<span class='highlightedText'>ÄR</span>K<BR>{clockText01}{clockText02}</div>
     </body>
 </html>";
             StartTimerAndShowBrowser();
@@ -284,7 +284,7 @@ body {
             ToogleButtons();
         }
 
-        private void QlocktwoCloneForm_FormClosing(object sender, FormClosingEventArgs e)
+        private void VolturaTextClockForm_FormClosing(object sender, FormClosingEventArgs e)
         {
             if (Location.X >= 0)
             {

@@ -1,2 +1,2 @@
-# QlocktwoClone
-A clone of QlockTwo physical clock as a Windows app (Swedish)
+# VolturaTextClock
+A Windows application that shows time as text

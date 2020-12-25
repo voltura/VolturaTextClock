@@ -6,7 +6,7 @@ using System.IO;
 using System.Reflection;
 using System.Windows.Forms;
 
-namespace QlocktwoClone
+namespace VolturaTextClock
 {
     internal static class Program
     {
@@ -26,14 +26,14 @@ namespace QlocktwoClone
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             Log.Info = "Starting form...";
-            Application.Run(new QlocktwoCloneForm());
+            Application.Run(new VolturaTextClockForm());
         }
 
         private static void SetupAppConfig()
         {
             string sourceAppConfigJsonFile = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), @"Properties\appsettings.json");
             ConfigurationFile = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
-                "QlocktwoCloneAppsettings.json");
+                "VolturaTextClockAppsettings.json");
             bool skipCheck = false;
             if (!File.Exists(ConfigurationFile))
             {

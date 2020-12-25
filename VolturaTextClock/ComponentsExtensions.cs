@@ -1,6 +1,6 @@
 ﻿using System.Windows.Forms;
 
-namespace QlocktwoClone
+namespace VolturaTextClock
 {
     public static class ComponentsExtensions
     {
