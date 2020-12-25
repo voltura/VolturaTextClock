@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Win32;
+using System;
 using System.IO;
 using System.Runtime.Versioning;
 using System.Windows.Forms;
@@ -86,7 +87,25 @@ namespace VolturaTextClock
             optionsPicBox.BackgroundImageLayout = ImageLayout.Zoom;
             settingsPicBox.Image = optionsPicBox.BackgroundImage = Properties.Resources.gear;
             settingsPicBox.BackgroundImageLayout = ImageLayout.Zoom;
-            closeBtn.TextAlign = minimizeBtn.TextAlign = System.Drawing.ContentAlignment.TopCenter;
+            pinBtn.TextAlign = closeBtn.TextAlign = minimizeBtn.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+
+
+
+            int appWidth = 480;
+            int appHeight = 480;
+            this.panel1.Size = new System.Drawing.Size(appWidth, appHeight);
+            this.ClientSize = new System.Drawing.Size(appWidth, appHeight);
+            this.browser.Size = new System.Drawing.Size(appWidth, appHeight);
+
+            this.closeBtn.Location = new System.Drawing.Point(338, 430);
+            this.minimizeBtn.Location = new System.Drawing.Point(288, 430);
+            this.optionsPicBox.Location = new System.Drawing.Point(430, 430);
+            this.settingsPicBox.Location = new System.Drawing.Point(388, 430);
+            this.pinBtn.Location = new System.Drawing.Point(238, 430);
+
+            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.AutoSize = true;
         }
 
         private void OptionsPicBox_Click(object sender, EventArgs e)
@@ -184,13 +203,33 @@ namespace VolturaTextClock
             {
                 clockText02 = clockText02.Remove(m_Location, m_HourText.Length).Insert(m_Location, $"<span class='highlightedText'>{m_HourText}</span>");
             }
+            int DPI = Int32.Parse((string)Registry.GetValue(
+   @"HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\ThemeManager",
+   "LastLoadedDPI", "96"));
+            float scale = 96 / (float)DPI;
+            float scalePercent = (1 - scale);
+            if (scalePercent < 1.0f) scalePercent += 1.0f;
+
+
+   //         MessageBox.Show($"DPI: {DPI} Scale: {scale}");
+            float scaledFontSize = 1.04f * scalePercent;
+            float scaledLetterSpacing = 0.4f * scalePercent;
+
+            float scaledLeftPadding = scaledFontSize + scaledLetterSpacing;
+            float scaledTopPadding = scaledLeftPadding * 0.8f; 
+            string fontSize = $"{scaledFontSize:#.00}em";
+            string topPadding = $"{scaledTopPadding:#.00}em";
+            string leftPadding = $"{scaledLeftPadding:#.00}em";
+            string letterSpacing = $"{scaledLetterSpacing:#.00}em";
+
             string style = @"
 html,
 body {
   position: relative;
   margin: 0;
   height: 100%;
-  font-size: 35px; 
+  width: 100%;
+  font-size: " + fontSize + @";
   font-family: 'Courier New', Courier, monospace;
   background-image: url('file:///" + m_ImagePath + @"');
   background-repeat: no-repeat;
@@ -198,10 +237,13 @@ body {
   color: #F8F8F8;
   background-color: #000000;
   font-weight: normal;
-  letter-spacing: 0.4em;
+  letter-spacing: " + letterSpacing + @";
 }
 div {
-  padding: 34px 44px 34px 44px;
+  padding-top: " + topPadding + @";
+  padding-right: 0em;
+  padding-bottom: 0em;
+  padding-left: " + leftPadding + @";
 }
 .highlightedText {
   color: #FFFFF9;
