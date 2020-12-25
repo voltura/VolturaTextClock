@@ -1,0 +1,57 @@
+Rename application - name TBD
+Custom background image + select image from embedded templates
+Options/settings:
+Clock text language dropdown (English, Swedish)
+Start with Windows
+Minimize to taskbar
+Start minimized
+Automatically check for updates (checkbox + button 'Check now')
+Font selection (selected monospace system fonts in custom dropdown)
+Active time word font color selection (select color by palette, color visible in options)
+Inactive time word font color selection (select color by palette, color visible in options)
+Font glow effect on/off (default on)
+Option to pin / unpin (Always on top) - DONE!
+Feature: Remember window position
+Feature: Neon glow effect for active time words - DONE!
+Configuration file - DONE!
+Change buttons to icons
+Feature: Icons to change color on mouse over
+Clock text displayed in language matching system if no user selection has been made (config file entry) if language not matching system default to English)
+Cleanup icons / images to have transparent background
+Move program settings to subfolder with program name
+Add about form with:
+Version, copyright text
+Web link to application web page
+Donations link
+Copyright text
+Thanks / inspiration / contributions / 3rd party property copyright notices
+Add check for updates at start of application + setting to turn on/off
+Customize Confirmation Message box
+Move main form by click and drag anywhere
+Checkboxes text to have transparent background but still be clickable
+Context menu when right click on taskbar icon to restore, close, about, settings
+Left click on taskbar icon => toggle main form visibility
+Make main for exactly square, align clock text centered via CSS
+Extract HTML + CSS to configuration files
+Remove unused resources, images
+Move all application text to resource file, make localized texts in Swedish and English
+Add support for English clock text (Swedish + English)
+Windows Installer (.MSI) with:
+Copyright text + contributions
+Two ways to install; Default or Customized
+Customized install options;
+Choose destination folder (default: PROGRAM FILES\Voltura AB<Application name>)
+Options selection (Start with Windows (default: no), Automatically check for updates (default: no))
+Question to install for Current User or All Users (default: Current User)
+Question 'Add application shortcut on the Desktop?' (default: yes)
+Question 'Add application to the Start Menu?' (Start menu\Voltura AB<application name><Application>.exe, website link, uninstall link) (default: yes)
+Question 'Start application when setup is complete?' (default: yes)
+Bonus features:
+Easter egg; double click on time text => time sentence copied to clipboard + time read out in human voice (audio)
+Button with Shortcut to change Windows time
+Option (checkbox, default: unchecked) 'Also display numeric time', if checked, display time on main form below clock text
+Neon flicker (option checkbox, default: off/unchecked)
+Theme support (Select existing template, edit, create) (fonts, colors, glow, flicker, background image)
+Context menu option: Request new feature
+Context menu option: Report a bug
+Context menu option: Help (application usage)

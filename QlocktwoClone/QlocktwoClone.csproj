@@ -10,7 +10,7 @@
     <Company>Voltura AB</Company>
     <Description>A clone of Qlocktwo clock in Swedish as a Windows Forms application</Description>
     <Copyright>Copyright 2020 Voltura AB</Copyright>
-    <ApplicationIcon>clock.ico</ApplicationIcon>
+    <ApplicationIcon>QlocktwoClone.ico</ApplicationIcon>
     <EnableNETAnalyzers>true</EnableNETAnalyzers>
     <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
     <Version>1.0.5</Version>
