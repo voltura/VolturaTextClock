@@ -60,7 +60,6 @@ namespace VolturaTextClock
         {
             clockPictureBox.MoveOtherWithMouse(this);
             clockPictureBox.SendToBack();
-            closeBtn.TextAlign = minimizeBtn.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
         }
 
         private void ShowSettingsForm()
@@ -85,7 +84,7 @@ namespace VolturaTextClock
 
         private void ToogleButtons()
         {
-            settingsPicBox.Visible = pinPicBox.Visible = closeBtn.Visible = minimizeBtn.Visible = !minimizeBtn.Visible;
+            settingsPicBox.Visible = pinPicBox.Visible = closePicBox.Visible = minimizePicBox.Visible = !minimizePicBox.Visible;
             clockPictureBox.SendToBack();
         }
 
@@ -170,19 +169,13 @@ namespace VolturaTextClock
             UpdateClockText();
         }
 
-        private void CloseBtn_Click(object sender, EventArgs e)
+        private void ClosePicBox_Click(object sender, EventArgs e)
         {
             if (DialogResult.Yes == MessageBox.Show(this, "Do you want to close the application?", 
                 "Close application", MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1))
             {
                 Application.Exit();
             }
-        }
-
-        private void MinimizeBtn_Click(object sender, EventArgs e)
-        {
-            WindowState = FormWindowState.Minimized;
-            ToogleButtons();
         }
 
         private void VolturaTextClockForm_FormClosing(object sender, FormClosingEventArgs e)
@@ -195,6 +188,12 @@ namespace VolturaTextClock
             TopMost = !TopMost;
             pinPicBox.Image = TopMost ? Properties.Resources.unpin : Properties.Resources.pin;
             AppConfig.AddOrUpdateAppSetting("alwaysOnTop", TopMost);
+            ToogleButtons();
+        }
+
+        private void MinimizePicBox_Click(object sender, EventArgs e)
+        {
+            WindowState = FormWindowState.Minimized;
             ToogleButtons();
         }
     }
