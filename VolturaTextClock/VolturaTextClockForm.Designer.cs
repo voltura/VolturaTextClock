@@ -39,10 +39,11 @@ namespace VolturaTextClock
             this.optionsPicBox = new System.Windows.Forms.PictureBox();
             this.useTip = new System.Windows.Forms.ToolTip(this.components);
             this.settingsPicBox = new System.Windows.Forms.PictureBox();
-            this.pinBtn = new System.Windows.Forms.Button();
+            this.pinPicBox = new System.Windows.Forms.PictureBox();
             this.clockPictureBox = new System.Windows.Forms.PictureBox();
             ((System.ComponentModel.ISupportInitialize)(this.optionsPicBox)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.settingsPicBox)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pinPicBox)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.clockPictureBox)).BeginInit();
             this.SuspendLayout();
             // 
@@ -121,23 +122,22 @@ namespace VolturaTextClock
             this.settingsPicBox.Visible = false;
             this.settingsPicBox.Click += new System.EventHandler(this.SettingsPicBox_Click);
             // 
-            // pinBtn
+            // pinPicBox
             // 
-            this.pinBtn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.pinBtn.BackColor = System.Drawing.Color.Gray;
-            this.pinBtn.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.pinBtn.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.pinBtn.Font = new System.Drawing.Font("Segoe UI", 8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.pinBtn.ForeColor = System.Drawing.Color.White;
-            this.pinBtn.Location = new System.Drawing.Point(225, 440);
-            this.pinBtn.Name = "pinBtn";
-            this.pinBtn.Size = new System.Drawing.Size(74, 40);
-            this.pinBtn.TabIndex = 5;
-            this.pinBtn.Text = "Pin";
-            this.useTip.SetToolTip(this.pinBtn, "Press to toogle clock always visible on top of other windows");
-            this.pinBtn.UseVisualStyleBackColor = false;
-            this.pinBtn.Visible = false;
-            this.pinBtn.Click += new System.EventHandler(this.PinBtn_Click);
+            this.pinPicBox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.pinPicBox.BackColor = System.Drawing.Color.Transparent;
+            this.pinPicBox.Image = ((System.Drawing.Image)(resources.GetObject("pinPicBox.Image")));
+            this.pinPicBox.InitialImage = ((System.Drawing.Image)(resources.GetObject("pinPicBox.InitialImage")));
+            this.pinPicBox.Location = new System.Drawing.Point(220, 440);
+            this.pinPicBox.Margin = new System.Windows.Forms.Padding(0);
+            this.pinPicBox.Name = "pinPicBox";
+            this.pinPicBox.Size = new System.Drawing.Size(40, 40);
+            this.pinPicBox.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.pinPicBox.TabIndex = 10;
+            this.pinPicBox.TabStop = false;
+            this.useTip.SetToolTip(this.pinPicBox, "Press to toggle if the clock always should be displayed on top");
+            this.pinPicBox.Visible = false;
+            this.pinPicBox.Click += new System.EventHandler(this.PinPicBox_Click);
             // 
             // clockPictureBox
             // 
@@ -161,8 +161,8 @@ namespace VolturaTextClock
             this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
             this.ClientSize = new System.Drawing.Size(480, 480);
             this.ControlBox = false;
+            this.Controls.Add(this.pinPicBox);
             this.Controls.Add(this.closeBtn);
-            this.Controls.Add(this.pinBtn);
             this.Controls.Add(this.optionsPicBox);
             this.Controls.Add(this.minimizeBtn);
             this.Controls.Add(this.settingsPicBox);
@@ -180,6 +180,7 @@ namespace VolturaTextClock
             this.Load += new System.EventHandler(this.VolturaTextClockForm_Load);
             ((System.ComponentModel.ISupportInitialize)(this.optionsPicBox)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.settingsPicBox)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pinPicBox)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.clockPictureBox)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
@@ -193,8 +194,8 @@ namespace VolturaTextClock
         private System.Windows.Forms.PictureBox optionsPicBox;
         private System.Windows.Forms.PictureBox settingsPicBox;
         private System.Windows.Forms.ToolTip useTip;
-        private System.Windows.Forms.Button pinBtn;
         private System.Windows.Forms.PictureBox clockPictureBox;
+        private System.Windows.Forms.PictureBox pinPicBox;
     }
 }
 

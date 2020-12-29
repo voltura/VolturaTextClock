@@ -60,7 +60,7 @@ namespace VolturaTextClock
         {
             clockPictureBox.MoveOtherWithMouse(this);
             clockPictureBox.SendToBack();
-            pinBtn.TextAlign = closeBtn.TextAlign = minimizeBtn.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            closeBtn.TextAlign = minimizeBtn.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
         }
 
         private void ShowSettingsForm()
@@ -79,13 +79,13 @@ namespace VolturaTextClock
                 }
                 ApplicationSettingsForm.ShowDialog(this);
                 TopMost = AppConfig.GetValue("alwaysOnTop", false);
-                pinBtn.Text = TopMost ? "Unpin" : "Pin";
+                pinPicBox.Image = TopMost ? Properties.Resources.unpin : Properties.Resources.pin;
             }
         }
 
         private void ToogleButtons()
         {
-            settingsPicBox.Visible = pinBtn.Visible = closeBtn.Visible = minimizeBtn.Visible = !minimizeBtn.Visible;
+            settingsPicBox.Visible = pinPicBox.Visible = closeBtn.Visible = minimizeBtn.Visible = !minimizeBtn.Visible;
             clockPictureBox.SendToBack();
         }
 
@@ -138,7 +138,7 @@ namespace VolturaTextClock
             UpdateClockText();
             SetFormLocationFromSettings();
             TopMost = AppConfig.GetValue("alwaysOnTop", false);
-            pinBtn.Text = TopMost ? "Unpin" : "Pin";
+            pinPicBox.Image = TopMost ? Properties.Resources.unpin : Properties.Resources.pin;
             Visible = true;
         }
 
@@ -185,17 +185,17 @@ namespace VolturaTextClock
             ToogleButtons();
         }
 
-        private void PinBtn_Click(object sender, EventArgs e)
-        {
-            TopMost = !TopMost;
-            pinBtn.Text = TopMost ? "Unpin" : "Pin";
-            AppConfig.AddOrUpdateAppSetting("alwaysOnTop", TopMost);
-            ToogleButtons();
-        }
-
         private void VolturaTextClockForm_FormClosing(object sender, FormClosingEventArgs e)
         {
             SaveFormLocation();
+        }
+
+        private void PinPicBox_Click(object sender, EventArgs e)
+        {
+            TopMost = !TopMost;
+            pinPicBox.Image = TopMost ? Properties.Resources.unpin : Properties.Resources.pin;
+            AppConfig.AddOrUpdateAppSetting("alwaysOnTop", TopMost);
+            ToogleButtons();
         }
     }
 }

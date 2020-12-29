@@ -150,6 +150,16 @@ namespace VolturaTextClock.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap pin {
+            get {
+                object obj = ResourceManager.GetObject("pin", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Close.
         /// </summary>
         internal static string SaveButtonTitle {
@@ -192,6 +202,16 @@ namespace VolturaTextClock.Properties {
         internal static string StartWithWindowsText {
             get {
                 return ResourceManager.GetString("StartWithWindowsText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap unpin {
+            get {
+                object obj = ResourceManager.GetObject("unpin", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
             }
         }
     }
