@@ -59,10 +59,10 @@ namespace VolturaTextClock
             this.settingsPanel.Controls.Add(this.chkStartWithWindows);
             this.settingsPanel.Controls.Add(this.chkAlwaysOnTop);
             this.settingsPanel.Controls.Add(this.chkStartMinimized);
-            this.settingsPanel.Location = new System.Drawing.Point(0, 64);
+            this.settingsPanel.Location = new System.Drawing.Point(5, 50);
             this.settingsPanel.Margin = new System.Windows.Forms.Padding(0);
             this.settingsPanel.Name = "settingsPanel";
-            this.settingsPanel.Size = new System.Drawing.Size(891, 474);
+            this.settingsPanel.Size = new System.Drawing.Size(501, 370);
             this.settingsPanel.TabIndex = 2;
             // 
             // btnSave
@@ -73,12 +73,13 @@ namespace VolturaTextClock
             this.btnSave.FlatAppearance.MouseOverBackColor = System.Drawing.Color.LightBlue;
             this.btnSave.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnSave.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.btnSave.Location = new System.Drawing.Point(657, 368);
-            this.btnSave.Margin = new System.Windows.Forms.Padding(5, 4, 5, 4);
+            this.btnSave.Location = new System.Drawing.Point(384, 322);
+            this.btnSave.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.btnSave.Name = "btnSave";
-            this.btnSave.Size = new System.Drawing.Size(215, 84);
+            this.btnSave.Size = new System.Drawing.Size(110, 41);
             this.btnSave.TabIndex = 7;
             this.btnSave.Text = "Close";
+            this.btnSave.TextAlign = System.Drawing.ContentAlignment.TopCenter;
             this.btnSave.UseVisualStyleBackColor = false;
             this.btnSave.Click += new System.EventHandler(this.Save_Click);
             // 
@@ -97,10 +98,10 @@ namespace VolturaTextClock
             this.chkStartWithWindows.FlatAppearance.MouseOverBackColor = System.Drawing.Color.LightBlue;
             this.chkStartWithWindows.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.chkStartWithWindows.Font = new System.Drawing.Font("Segoe UI Semibold", 10.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.chkStartWithWindows.Location = new System.Drawing.Point(21, 20);
-            this.chkStartWithWindows.Margin = new System.Windows.Forms.Padding(5, 4, 5, 4);
+            this.chkStartWithWindows.Location = new System.Drawing.Point(16, 14);
+            this.chkStartWithWindows.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.chkStartWithWindows.Name = "chkStartWithWindows";
-            this.chkStartWithWindows.Size = new System.Drawing.Size(172, 42);
+            this.chkStartWithWindows.Size = new System.Drawing.Size(132, 34);
             this.chkStartWithWindows.TabIndex = 0;
             this.chkStartWithWindows.Text = "Auto start";
             this.chkStartWithWindows.UseVisualStyleBackColor = false;
@@ -121,10 +122,10 @@ namespace VolturaTextClock
             this.chkAlwaysOnTop.FlatAppearance.MouseOverBackColor = System.Drawing.Color.LightBlue;
             this.chkAlwaysOnTop.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.chkAlwaysOnTop.Font = new System.Drawing.Font("Segoe UI Semibold", 10.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.chkAlwaysOnTop.Location = new System.Drawing.Point(21, 152);
-            this.chkAlwaysOnTop.Margin = new System.Windows.Forms.Padding(5, 4, 5, 4);
+            this.chkAlwaysOnTop.Location = new System.Drawing.Point(16, 110);
+            this.chkAlwaysOnTop.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.chkAlwaysOnTop.Name = "chkAlwaysOnTop";
-            this.chkAlwaysOnTop.Size = new System.Drawing.Size(225, 42);
+            this.chkAlwaysOnTop.Size = new System.Drawing.Size(171, 34);
             this.chkAlwaysOnTop.TabIndex = 3;
             this.chkAlwaysOnTop.Text = "Always on top";
             this.chkAlwaysOnTop.UseVisualStyleBackColor = false;
@@ -144,10 +145,10 @@ namespace VolturaTextClock
             this.chkStartMinimized.FlatAppearance.MouseOverBackColor = System.Drawing.Color.LightBlue;
             this.chkStartMinimized.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.chkStartMinimized.Font = new System.Drawing.Font("Segoe UI Semibold", 10.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.chkStartMinimized.Location = new System.Drawing.Point(21, 86);
-            this.chkStartMinimized.Margin = new System.Windows.Forms.Padding(5, 4, 5, 4);
+            this.chkStartMinimized.Location = new System.Drawing.Point(16, 62);
+            this.chkStartMinimized.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.chkStartMinimized.Name = "chkStartMinimized";
-            this.chkStartMinimized.Size = new System.Drawing.Size(239, 42);
+            this.chkStartMinimized.Size = new System.Drawing.Size(182, 34);
             this.chkStartMinimized.TabIndex = 2;
             this.chkStartMinimized.Text = "Start in Taskbar";
             this.chkStartMinimized.UseVisualStyleBackColor = false;
@@ -159,10 +160,10 @@ namespace VolturaTextClock
             this.lblSettingsTitle.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.lblSettingsTitle.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.lblSettingsTitle.Location = new System.Drawing.Point(0, 0);
-            this.lblSettingsTitle.Margin = new System.Windows.Forms.Padding(5, 0, 5, 0);
+            this.lblSettingsTitle.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblSettingsTitle.Name = "lblSettingsTitle";
-            this.lblSettingsTitle.Padding = new System.Windows.Forms.Padding(52, 0, 0, 0);
-            this.lblSettingsTitle.Size = new System.Drawing.Size(891, 64);
+            this.lblSettingsTitle.Padding = new System.Windows.Forms.Padding(40, 0, 0, 0);
+            this.lblSettingsTitle.Size = new System.Drawing.Size(512, 50);
             this.lblSettingsTitle.TabIndex = 1;
             this.lblSettingsTitle.Text = "Settings";
             this.lblSettingsTitle.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -172,10 +173,10 @@ namespace VolturaTextClock
             // minimizePanelFrame
             // 
             this.minimizePanelFrame.Controls.Add(this.minimizePanel);
-            this.minimizePanelFrame.Location = new System.Drawing.Point(829, 0);
-            this.minimizePanelFrame.Margin = new System.Windows.Forms.Padding(5, 4, 5, 4);
+            this.minimizePanelFrame.Location = new System.Drawing.Point(453, 0);
+            this.minimizePanelFrame.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.minimizePanelFrame.Name = "minimizePanelFrame";
-            this.minimizePanelFrame.Size = new System.Drawing.Size(59, 64);
+            this.minimizePanelFrame.Size = new System.Drawing.Size(45, 50);
             this.minimizePanelFrame.TabIndex = 3;
             this.minimizePanelFrame.Click += new System.EventHandler(this.MinimizePanelFrame_Click);
             this.minimizePanelFrame.MouseEnter += new System.EventHandler(this.MinimizePanel_MouseEnter);
@@ -185,10 +186,10 @@ namespace VolturaTextClock
             // 
             this.minimizePanel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.minimizePanel.BackColor = System.Drawing.Color.White;
-            this.minimizePanel.Location = new System.Drawing.Point(12, 14);
+            this.minimizePanel.Location = new System.Drawing.Point(9, 11);
             this.minimizePanel.Margin = new System.Windows.Forms.Padding(0);
             this.minimizePanel.Name = "minimizePanel";
-            this.minimizePanel.Size = new System.Drawing.Size(40, 16);
+            this.minimizePanel.Size = new System.Drawing.Size(31, 12);
             this.minimizePanel.TabIndex = 3;
             this.minimizePanel.Click += new System.EventHandler(this.MinimizePanel_Click);
             this.minimizePanel.MouseEnter += new System.EventHandler(this.MinimizePanel_MouseEnter);
@@ -197,20 +198,20 @@ namespace VolturaTextClock
             // 
             this.titleIcon.BackColor = System.Drawing.Color.Transparent;
             this.titleIcon.Image = ((System.Drawing.Image)(resources.GetObject("titleIcon.Image")));
-            this.titleIcon.Location = new System.Drawing.Point(7, 0);
-            this.titleIcon.Margin = new System.Windows.Forms.Padding(5, 4, 5, 4);
+            this.titleIcon.Location = new System.Drawing.Point(5, 0);
+            this.titleIcon.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.titleIcon.Name = "titleIcon";
-            this.titleIcon.Size = new System.Drawing.Size(52, 64);
+            this.titleIcon.Size = new System.Drawing.Size(40, 50);
             this.titleIcon.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.titleIcon.TabIndex = 4;
             this.titleIcon.TabStop = false;
             // 
             // SettingsForm
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(13F, 32F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(10F, 25F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.DeepSkyBlue;
-            this.ClientSize = new System.Drawing.Size(891, 538);
+            this.ClientSize = new System.Drawing.Size(512, 425);
             this.ControlBox = false;
             this.Controls.Add(this.titleIcon);
             this.Controls.Add(this.minimizePanelFrame);
@@ -220,7 +221,7 @@ namespace VolturaTextClock
             this.ForeColor = System.Drawing.Color.White;
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
-            this.Margin = new System.Windows.Forms.Padding(5, 4, 5, 4);
+            this.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "SettingsForm";
