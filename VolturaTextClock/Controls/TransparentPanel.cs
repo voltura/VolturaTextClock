@@ -10,7 +10,7 @@ namespace VolturaTextClock.Forms.Controls
         public TransparentPanel()
         {
         }
- 
+
         protected override CreateParams CreateParams
         {
             get
@@ -20,7 +20,7 @@ namespace VolturaTextClock.Forms.Controls
                 return createParams;
             }
         }
- 
+
         protected override void OnPaintBackground(PaintEventArgs e)
         {
             // Do not paint background.

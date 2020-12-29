@@ -16,6 +16,8 @@ namespace VolturaTextClock
             InitializeComponent();
             SetTheme();
             UpdateUI();
+            this.DoubleBuffered = true;
+            this.ResizeRedraw = true;
         }
 
         public SettingsForm ApplicationSettingsForm
@@ -195,6 +197,17 @@ namespace VolturaTextClock
         {
             WindowState = FormWindowState.Minimized;
             ToogleButtons();
+        }
+
+        private const int CS_DROPSHADOW = 0x20000;
+        protected override CreateParams CreateParams
+        {
+            get
+            {
+                CreateParams cp = base.CreateParams;
+                cp.ClassStyle |= CS_DROPSHADOW;
+                return cp;
+            }
         }
     }
 }

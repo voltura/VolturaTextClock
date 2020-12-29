@@ -67,7 +67,7 @@ namespace VolturaTextClock
                     }
                 }
                 OriginalAppConfig = null;
-            }            
+            }
         }
 
         public static object GetPropValue(object src, string propName)
@@ -77,7 +77,7 @@ namespace VolturaTextClock
         public static AppSettings GetConfig(string configFile)
         {
             string json = File.ReadAllText(configFile);
-            Root root = JsonConvert.DeserializeObject<Root>(json); 
+            Root root = JsonConvert.DeserializeObject<Root>(json);
             return root.appSettings;
         }
     }
@@ -137,8 +137,8 @@ namespace VolturaTextClock
             else
             {
                 // we've got to the end of the tree, set the value
-                if (jsonObj[currentSection] != null) 
-                { 
+                if (jsonObj[currentSection] != null)
+                {
                     jsonObj[currentSection] = value;
                 }
                 else

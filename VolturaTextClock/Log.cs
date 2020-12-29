@@ -70,7 +70,7 @@ namespace VolturaTextClock
                 FileInfo fi = new FileInfo(Path.Combine(appDataFolder, logFile));
                 if (fi.Exists)
                 {
-                    int trimSize = AppConfig.GetValue<int>("logFileSizeMB", 10)  * 1024 * 1024;
+                    int trimSize = AppConfig.GetValue<int>("logFileSizeMB", 10) * 1024 * 1024;
                     if (fi.Length > trimSize)
                     {
                         using MemoryStream ms = new MemoryStream(trimSize);

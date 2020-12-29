@@ -1,9 +1,9 @@
 ﻿#region Using statements
 
-using VolturaTextClock.Properties;
 using System;
 using System.Drawing;
 using System.Windows.Forms;
+using VolturaTextClock.Properties;
 using static VolturaTextClock.Program;
 
 #endregion
