@@ -94,6 +94,7 @@ namespace VolturaTextClock
         {
             UnfocusMinimizeIcon();
             AppConfig.AddOrUpdateAppSetting<bool>("autoStart", chkStartWithWindows.Checked);
+            StartWithWindows.Active = chkStartWithWindows.Checked;
             AppConfig.AddOrUpdateAppSetting<bool>("alwaysOnTop", chkAlwaysOnTop.Checked);
             AppConfig.AddOrUpdateAppSetting<bool>("startMinimized", chkStartMinimized.Checked);
         }

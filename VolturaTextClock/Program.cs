@@ -22,6 +22,7 @@ namespace VolturaTextClock
         {
             Log.Init();
             SetupAppConfig();
+            UpdateConfig();
             Application.SetHighDpiMode(HighDpiMode.PerMonitorV2);
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
@@ -29,6 +30,10 @@ namespace VolturaTextClock
             Application.Run(new VolturaTextClockForm());
         }
 
+        private static void UpdateConfig()
+        {
+            StartWithWindows.Active = AppConfig.GetValue("autoStart", false);
+        }
         private static void SetupAppConfig()
         {
             string sourceAppConfigJsonFile = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), @"Properties\appsettings.json");

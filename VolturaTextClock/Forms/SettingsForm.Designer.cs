@@ -105,7 +105,6 @@ namespace VolturaTextClock
             this.chkStartWithWindows.TabIndex = 0;
             this.chkStartWithWindows.Text = "Auto start";
             this.chkStartWithWindows.UseVisualStyleBackColor = false;
-            this.chkStartWithWindows.Visible = false;
             // 
             // chkAlwaysOnTop
             // 
