@@ -1,8 +1,8 @@
 ﻿using System;
 using System.IO;
 using System.Windows.Forms;
-using static VolturaTextClock.Program;
 using VolturaTextClock.Library;
+using static VolturaTextClock.Program;
 
 namespace VolturaTextClock
 {
@@ -13,11 +13,15 @@ namespace VolturaTextClock
 
         public VolturaTextClockForm()
         {
+            DoubleBuffered = true;
+            ResizeRedraw = true;
             InitializeComponent();
             SetTheme();
             UpdateUI();
-            this.DoubleBuffered = true;
-            this.ResizeRedraw = true;
+            ImageOverlay.InitializeImage(ref optionsPicBox);
+            ImageOverlay.InitializeImage(ref settingsPicBox);
+            ImageOverlay.InitializeImage(ref minimizePicBox);
+            ImageOverlay.InitializeImage(ref closePicBox);
         }
 
         public SettingsForm ApplicationSettingsForm
@@ -45,7 +49,7 @@ namespace VolturaTextClock
 
         private void SetFormLocationFromSettings()
         {
-            string formLocation = AppConfig.GetValue<string>("mainFormLocation", "40,40");
+            string formLocation = AppConfig.GetValue("mainFormLocation", "40,40");
             string[] formLeftAndTop = formLocation.Split(new char[] { ',' });
             if (formLeftAndTop.Length == 2)
             {
@@ -60,8 +64,8 @@ namespace VolturaTextClock
 
         private void UpdateUI()
         {
-            clockPictureBox.MoveOtherWithMouse(this);
-            clockPictureBox.SendToBack();
+            clockPicBox.MoveOtherWithMouse(this);
+            clockPicBox.SendToBack();
         }
 
         private void ShowSettingsForm()
@@ -87,7 +91,7 @@ namespace VolturaTextClock
         private void ToogleButtons()
         {
             settingsPicBox.Visible = pinPicBox.Visible = closePicBox.Visible = minimizePicBox.Visible = !minimizePicBox.Visible;
-            clockPictureBox.SendToBack();
+            clockPicBox.SendToBack();
         }
 
         private static string SaveImageToDisk()
@@ -109,11 +113,12 @@ namespace VolturaTextClock
             }
             return path.Replace('\\', '/');
         }
-
         private void UpdateClockText()
         {
             if (Visible && (m_SettingsForm == null || m_SettingsForm.Visible == false))
-                clockPictureBox.Image = TextClock.GetImage(m_Theme);  // clock image that adhears to the scale factor set in Windows (dpi)
+            {
+                clockPicBox.Image = TextClock.GetImage(m_Theme);
+            }
             StartClockTimer();
         }
 
@@ -136,11 +141,12 @@ namespace VolturaTextClock
 
         private void VolturaTextClockForm_Load(object sender, EventArgs e)
         {
-            UpdateClockText();
             SetFormLocationFromSettings();
             TopMost = AppConfig.GetValue("alwaysOnTop", false);
             pinPicBox.Image = TopMost ? Properties.Resources.unpin : Properties.Resources.pin;
             Visible = true;
+            ImageOverlay.SetGCSettings();
+            UpdateClockText();
         }
 
         private void OptionsPicBox_Click(object sender, EventArgs e)
@@ -151,6 +157,11 @@ namespace VolturaTextClock
         private void SettingsPicBox_Click(object sender, EventArgs e)
         {
             ShowSettingsForm();
+        }
+
+        private void PictureBox_MouseLeaveOrEnter(object sender, EventArgs e)
+        {
+            ImageOverlay.SwitchImage((PictureBox)sender);
         }
 
         /*private void CloseSettingsForm()
@@ -168,7 +179,7 @@ namespace VolturaTextClock
         private void ClockTimer_Tick(object sender, EventArgs e)
         {
             clockTimer.Stop();
-            UpdateClockText();
+         //   UpdateClockText();
         }
 
         private void ClosePicBox_Click(object sender, EventArgs e)
@@ -187,7 +198,7 @@ namespace VolturaTextClock
 
         private void PinPicBox_Click(object sender, EventArgs e)
         {
-            TopMost = !TopMost;
+            TopMost = !TopMost;            
             pinPicBox.Image = TopMost ? Properties.Resources.unpin : Properties.Resources.pin;
             AppConfig.AddOrUpdateAppSetting("alwaysOnTop", TopMost);
             ToogleButtons();
@@ -198,7 +209,7 @@ namespace VolturaTextClock
             WindowState = FormWindowState.Minimized;
             ToogleButtons();
         }
-
+        /*
         private const int CS_DROPSHADOW = 0x20000;
         protected override CreateParams CreateParams
         {
@@ -208,6 +219,6 @@ namespace VolturaTextClock
                 cp.ClassStyle |= CS_DROPSHADOW;
                 return cp;
             }
-        }
+        }*/
     }
 }

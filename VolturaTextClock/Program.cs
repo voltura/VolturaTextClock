@@ -10,9 +10,9 @@ namespace VolturaTextClock
 {
     internal static class Program
     {
-        public static IConfiguration AppConfig;
+        internal static IConfiguration AppConfig;
         private static IConfiguration OriginalAppConfig;
-        public static string ConfigurationFile;
+        internal static string ConfigurationFile;
 
         /// <summary>
         ///  The main entry point for the application.
@@ -34,6 +34,7 @@ namespace VolturaTextClock
         {
             StartWithWindows.Active = AppConfig.GetValue("autoStart", false);
         }
+
         private static void SetupAppConfig()
         {
             string sourceAppConfigJsonFile = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), @"Properties\appsettings.json");
@@ -70,21 +71,21 @@ namespace VolturaTextClock
             }
         }
 
-        public static object GetPropValue(object src, string propName)
+        internal static object GetPropValue(object src, string propName)
         {
             return src.GetType().GetRuntimeProperty(propName)?.GetValue(src);
         }
-        public static AppSettings GetConfig(string configFile)
+        internal static AppSettings GetConfig(string configFile)
         {
             string json = File.ReadAllText(configFile);
             Root root = JsonConvert.DeserializeObject<Root>(json);
-            return root.appSettings;
+            return root.AppSettings;
         }
     }
 
-    public static class ConfigExtensions
+    internal static class ConfigExtensions
     {
-        public static T GetValue<T>(this IConfiguration configuration, string keyName, T valueIfMissing)
+        internal static T GetValue<T>(this IConfiguration configuration, string keyName, T valueIfMissing)
         {
             string configSection = "appSettings";
             ((IConfigurationRoot)configuration).Reload();
@@ -95,14 +96,16 @@ namespace VolturaTextClock
             return (T)Convert.ChangeType(configuration[$"{configSection}:{keyName}"], typeof(T));
         }
 
-        public static bool KeyExists(this IConfiguration configuration, string keyName)
+        internal static bool KeyExists(this IConfiguration configuration, string keyName)
         {
             string configSection = "appSettings";
             ((IConfigurationRoot)configuration).Reload();
             return configuration[$"{configSection}:{keyName}"] != null;
         }
 
-        public static void AddOrUpdateAppSetting<T>(this IConfiguration configuration, string keyName, T value)
+#pragma warning disable IDE0060 // Remove unused parameter
+        internal static void AddOrUpdateAppSetting<T>(this IConfiguration configuration, string keyName, T value)
+#pragma warning restore IDE0060 // Remove unused parameter
         {
             string configSection = "appSettings";
             string sectionPathKey = $"{configSection}:{keyName}";

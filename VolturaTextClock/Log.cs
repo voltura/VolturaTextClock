@@ -131,7 +131,7 @@ namespace VolturaTextClock
 
         #endregion
 
-        #region Public static log properties
+        #region Internal static log properties
 
         /// <summary>
         ///     Log info
@@ -185,6 +185,19 @@ namespace VolturaTextClock
             set => Trace.TraceError("{0} {1}",
                     DateTime.Now.ToString("yyyy-MM-dd hh:mm:ss.fff", CultureInfo.InvariantCulture),
                     value);
+        }
+
+        #endregion
+
+        #region Internal static log methods
+
+        internal static void LogCaller()
+        {
+            StackTrace stackTrace = new StackTrace();
+            string method = stackTrace.GetFrame(1).GetMethod().Name;
+            string callee = stackTrace.GetFrame(2).GetMethod().Name;
+            Info = $"{method} called from {callee}";
+            Debug.WriteLine($"{method} called from {callee}");
         }
 
         #endregion

@@ -37,15 +37,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Include="Image\gear.bmp" />
-  </ItemGroup>
-
-  <ItemGroup>
     <None Include="Image\cogwheel.png" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Include="Image\glossy_black.jpg" />
   </ItemGroup>
 
   <ItemGroup>

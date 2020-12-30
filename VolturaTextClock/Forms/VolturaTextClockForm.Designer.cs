@@ -39,13 +39,13 @@ namespace VolturaTextClock
             this.settingsPicBox = new System.Windows.Forms.PictureBox();
             this.pinPicBox = new System.Windows.Forms.PictureBox();
             this.minimizePicBox = new System.Windows.Forms.PictureBox();
-            this.clockPictureBox = new System.Windows.Forms.PictureBox();
+            this.clockPicBox = new System.Windows.Forms.PictureBox();
             this.closePicBox = new System.Windows.Forms.PictureBox();
             ((System.ComponentModel.ISupportInitialize)(this.optionsPicBox)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.settingsPicBox)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pinPicBox)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.minimizePicBox)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.clockPictureBox)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.clockPicBox)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.closePicBox)).BeginInit();
             this.SuspendLayout();
             // 
@@ -60,9 +60,9 @@ namespace VolturaTextClock
             this.optionsPicBox.BackColor = System.Drawing.Color.Transparent;
             this.optionsPicBox.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
             this.optionsPicBox.Image = ((System.Drawing.Image)(resources.GetObject("optionsPicBox.Image")));
-            this.optionsPicBox.InitialImage = ((System.Drawing.Image)(resources.GetObject("optionsPicBox.InitialImage")));
+            this.optionsPicBox.InitialImage = null;
             this.optionsPicBox.Location = new System.Drawing.Point(440, 440);
-            this.optionsPicBox.Margin = new System.Windows.Forms.Padding(1, 2, 1, 2);
+            this.optionsPicBox.Margin = new System.Windows.Forms.Padding(0);
             this.optionsPicBox.Name = "optionsPicBox";
             this.optionsPicBox.Size = new System.Drawing.Size(40, 40);
             this.optionsPicBox.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
@@ -70,14 +70,16 @@ namespace VolturaTextClock
             this.optionsPicBox.TabStop = false;
             this.useTip.SetToolTip(this.optionsPicBox, "Press to toogle buttons");
             this.optionsPicBox.Click += new System.EventHandler(this.OptionsPicBox_Click);
+            this.optionsPicBox.MouseEnter += new System.EventHandler(this.PictureBox_MouseLeaveOrEnter);
+            this.optionsPicBox.MouseLeave += new System.EventHandler(this.PictureBox_MouseLeaveOrEnter);
             // 
             // settingsPicBox
             // 
             this.settingsPicBox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.settingsPicBox.BackColor = System.Drawing.Color.Transparent;
             this.settingsPicBox.Image = ((System.Drawing.Image)(resources.GetObject("settingsPicBox.Image")));
-            this.settingsPicBox.InitialImage = ((System.Drawing.Image)(resources.GetObject("settingsPicBox.InitialImage")));
-            this.settingsPicBox.Location = new System.Drawing.Point(260, 440);
+            this.settingsPicBox.InitialImage = null;
+            this.settingsPicBox.Location = new System.Drawing.Point(243, 440);
             this.settingsPicBox.Margin = new System.Windows.Forms.Padding(0);
             this.settingsPicBox.Name = "settingsPicBox";
             this.settingsPicBox.Size = new System.Drawing.Size(40, 40);
@@ -87,14 +89,16 @@ namespace VolturaTextClock
             this.useTip.SetToolTip(this.settingsPicBox, "Press to show settings");
             this.settingsPicBox.Visible = false;
             this.settingsPicBox.Click += new System.EventHandler(this.SettingsPicBox_Click);
+            this.settingsPicBox.MouseEnter += new System.EventHandler(this.PictureBox_MouseLeaveOrEnter);
+            this.settingsPicBox.MouseLeave += new System.EventHandler(this.PictureBox_MouseLeaveOrEnter);
             // 
             // pinPicBox
             // 
             this.pinPicBox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.pinPicBox.BackColor = System.Drawing.Color.Transparent;
             this.pinPicBox.Image = ((System.Drawing.Image)(resources.GetObject("pinPicBox.Image")));
-            this.pinPicBox.InitialImage = ((System.Drawing.Image)(resources.GetObject("pinPicBox.InitialImage")));
-            this.pinPicBox.Location = new System.Drawing.Point(305, 440);
+            this.pinPicBox.InitialImage = null;
+            this.pinPicBox.Location = new System.Drawing.Point(292, 440);
             this.pinPicBox.Margin = new System.Windows.Forms.Padding(0);
             this.pinPicBox.Name = "pinPicBox";
             this.pinPicBox.Size = new System.Drawing.Size(40, 40);
@@ -110,8 +114,8 @@ namespace VolturaTextClock
             this.minimizePicBox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.minimizePicBox.BackColor = System.Drawing.Color.Transparent;
             this.minimizePicBox.Image = ((System.Drawing.Image)(resources.GetObject("minimizePicBox.Image")));
-            this.minimizePicBox.InitialImage = ((System.Drawing.Image)(resources.GetObject("minimizePicBox.InitialImage")));
-            this.minimizePicBox.Location = new System.Drawing.Point(350, 440);
+            this.minimizePicBox.InitialImage = null;
+            this.minimizePicBox.Location = new System.Drawing.Point(342, 440);
             this.minimizePicBox.Margin = new System.Windows.Forms.Padding(0);
             this.minimizePicBox.Name = "minimizePicBox";
             this.minimizePicBox.Size = new System.Drawing.Size(40, 40);
@@ -121,27 +125,30 @@ namespace VolturaTextClock
             this.useTip.SetToolTip(this.minimizePicBox, "Press to minimize clock (still running in taskbar)");
             this.minimizePicBox.Visible = false;
             this.minimizePicBox.Click += new System.EventHandler(this.MinimizePicBox_Click);
+            this.minimizePicBox.MouseEnter += new System.EventHandler(this.PictureBox_MouseLeaveOrEnter);
+            this.minimizePicBox.MouseLeave += new System.EventHandler(this.PictureBox_MouseLeaveOrEnter);
             // 
-            // clockPictureBox
+            // clockPicBox
             // 
-            this.clockPictureBox.BackColor = System.Drawing.Color.Transparent;
-            this.clockPictureBox.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.clockPictureBox.Location = new System.Drawing.Point(0, 0);
-            this.clockPictureBox.Margin = new System.Windows.Forms.Padding(0);
-            this.clockPictureBox.Name = "clockPictureBox";
-            this.clockPictureBox.Size = new System.Drawing.Size(480, 480);
-            this.clockPictureBox.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
-            this.clockPictureBox.TabIndex = 9;
-            this.clockPictureBox.TabStop = false;
-            this.useTip.SetToolTip(this.clockPictureBox, "Press and hold + move mouse to move clock");
+            this.clockPicBox.BackColor = System.Drawing.Color.Transparent;
+            this.clockPicBox.Image = ((System.Drawing.Image)(resources.GetObject("clockPicBox.Image")));
+            this.clockPicBox.Location = new System.Drawing.Point(0, 0);
+            this.clockPicBox.Margin = new System.Windows.Forms.Padding(0);
+            this.clockPicBox.MinimumSize = new System.Drawing.Size(480, 480);
+            this.clockPicBox.Name = "clockPicBox";
+            this.clockPicBox.Size = new System.Drawing.Size(480, 480);
+            this.clockPicBox.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.clockPicBox.TabIndex = 9;
+            this.clockPicBox.TabStop = false;
+            this.useTip.SetToolTip(this.clockPicBox, "Press and hold + move mouse to move clock");
             // 
             // closePicBox
             // 
             this.closePicBox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.closePicBox.BackColor = System.Drawing.Color.Transparent;
             this.closePicBox.Image = ((System.Drawing.Image)(resources.GetObject("closePicBox.Image")));
-            this.closePicBox.InitialImage = ((System.Drawing.Image)(resources.GetObject("closePicBox.InitialImage")));
-            this.closePicBox.Location = new System.Drawing.Point(395, 440);
+            this.closePicBox.InitialImage = null;
+            this.closePicBox.Location = new System.Drawing.Point(391, 440);
             this.closePicBox.Margin = new System.Windows.Forms.Padding(0);
             this.closePicBox.Name = "closePicBox";
             this.closePicBox.Size = new System.Drawing.Size(40, 40);
@@ -151,14 +158,15 @@ namespace VolturaTextClock
             this.useTip.SetToolTip(this.closePicBox, "Press to close clock");
             this.closePicBox.Visible = false;
             this.closePicBox.Click += new System.EventHandler(this.ClosePicBox_Click);
+            this.closePicBox.MouseEnter += new System.EventHandler(this.PictureBox_MouseLeaveOrEnter);
+            this.closePicBox.MouseLeave += new System.EventHandler(this.PictureBox_MouseLeaveOrEnter);
             // 
             // VolturaTextClockForm
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(10F, 25F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(13F, 32F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoSize = true;
             this.BackColor = System.Drawing.Color.Black;
-            this.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("$this.BackgroundImage")));
             this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
             this.ClientSize = new System.Drawing.Size(480, 480);
             this.ControlBox = false;
@@ -167,10 +175,9 @@ namespace VolturaTextClock
             this.Controls.Add(this.pinPicBox);
             this.Controls.Add(this.optionsPicBox);
             this.Controls.Add(this.settingsPicBox);
-            this.Controls.Add(this.clockPictureBox);
+            this.Controls.Add(this.clockPicBox);
             this.DoubleBuffered = true;
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
-            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Margin = new System.Windows.Forms.Padding(0);
             this.MaximizeBox = false;
             this.MinimizeBox = false;
@@ -183,10 +190,9 @@ namespace VolturaTextClock
             ((System.ComponentModel.ISupportInitialize)(this.settingsPicBox)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pinPicBox)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.minimizePicBox)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.clockPictureBox)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.clockPicBox)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.closePicBox)).EndInit();
             this.ResumeLayout(false);
-            this.PerformLayout();
 
         }
 
@@ -195,7 +201,7 @@ namespace VolturaTextClock
         private System.Windows.Forms.PictureBox optionsPicBox;
         private System.Windows.Forms.PictureBox settingsPicBox;
         private System.Windows.Forms.ToolTip useTip;
-        private System.Windows.Forms.PictureBox clockPictureBox;
+        private System.Windows.Forms.PictureBox clockPicBox;
         private System.Windows.Forms.PictureBox pinPicBox;
         private System.Windows.Forms.PictureBox minimizePicBox;
         private System.Windows.Forms.PictureBox closePicBox;

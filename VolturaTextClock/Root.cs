@@ -4,20 +4,21 @@ namespace VolturaTextClock
 {
     public class Root
     {
-        public AppSettings appSettings { get; set; }
+        [JsonProperty("appSettings")] 
+        public AppSettings AppSettings { get; set; }
     }
 
     public class AppSettings
     {
         [JsonProperty("alwaysOnTop")]
-        public bool alwaysOnTop { get; set; }
+        public bool AlwaysOnTop { get; set; }
         [JsonProperty("autoStart")]
-        public bool autoStart { get; set; }
+        public bool AutoStart { get; set; }
         [JsonProperty("startMinimized")]
-        public bool startMinimized { get; set; }
+        public bool StartMinimized { get; set; }
         [JsonProperty("mainFormLocation")]
-        public string mainFormLocation { get; set; }
+        public string MainFormLocation { get; set; }
         [JsonProperty("logFileSizeMB")]
-        public int logFileSizeMB { get; set; }
+        public int LogFileSizeMB { get; set; }
     }
 }
