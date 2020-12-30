@@ -163,8 +163,8 @@ namespace VolturaTextClock
             // 
             // VolturaTextClockForm
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(13F, 32F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.AutoSize = true;
             this.BackColor = System.Drawing.Color.Black;
             this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
@@ -197,6 +197,7 @@ namespace VolturaTextClock
         }
 
         #endregion
+
         private System.Windows.Forms.Timer clockTimer;
         private System.Windows.Forms.PictureBox optionsPicBox;
         private System.Windows.Forms.PictureBox settingsPicBox;

@@ -145,6 +145,8 @@ namespace VolturaTextClock
             TopMost = AppConfig.GetValue("alwaysOnTop", false);
             pinPicBox.Image = TopMost ? Properties.Resources.unpin : Properties.Resources.pin;
             Visible = true;
+            BackgroundImage = Properties.Resources.background;
+            BackgroundImageLayout = ImageLayout.Zoom;
             ImageOverlay.SetGCSettings();
             UpdateClockText();
         }
