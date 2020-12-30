@@ -21,7 +21,10 @@ namespace VolturaTextClock.Library
                 string HTML = TextClockHtml.GetHtml(theme);
                 float scalePercent;
                 using (Graphics g = Graphics.FromImage(new Bitmap(10, 10)))
+                {
                     scalePercent = g.DpiX / 96.0f;
+                }
+
                 Size IMAGE_SIZE = new Size((int)(480 * scalePercent), (int)(480 * scalePercent));
                 // enable HTML5 etc
                 SetFeatureBrowserFeature("FEATURE_BROWSER_EMULATION", 11000);
@@ -29,15 +32,15 @@ namespace VolturaTextClock.Library
                 SetFeatureBrowserFeature("FEATURE_IVIEWOBJECTDRAW_DMLT9_WITH_GDI", 1);
                 SetFeatureBrowserFeature("FEATURE_GPU_RENDERING", 0);
 
-                using (var apartment = new MessageLoopApartment())
+                using (MessageLoopApartment apartment = new MessageLoopApartment())
                 {
                     // create WebBrowser on a seprate thread with its own message loop
-                    var webBrowser = apartment.Invoke(() => new WebBrowser());
+                    WebBrowser webBrowser = apartment?.Invoke(() => new WebBrowser());
 
                     // navigate and wait for the result 
-                    apartment.Invoke(() =>
+                    apartment?.Invoke(() =>
                     {
-                        var pageLoadedTcs = new TaskCompletionSource<bool>();
+                        TaskCompletionSource<bool> pageLoadedTcs = new TaskCompletionSource<bool>();
                         webBrowser.DocumentCompleted += (s, e) =>
                             pageLoadedTcs.TrySetResult(true);
 
@@ -46,52 +49,58 @@ namespace VolturaTextClock.Library
                     }).Wait();
 
                     // save the picture
-                    apartment.Invoke(() =>
+                    apartment?.Invoke(() =>
                     {
-                        webBrowser.Size = IMAGE_SIZE;
-                        // webBrowser.Document.Body.SetAttribute("scroll", "no");
-                        // webBrowser.ScrollBarsEnabled = false;
-
-                        var rectangle = new Rectangle(0, 0, webBrowser.Width, webBrowser.Height);
-
-                        // get reference DC
-                        using (var screenGraphics = webBrowser.CreateGraphics())
+                        try
                         {
-                            var screenHdc = screenGraphics.GetHdc();
-                            // create a metafile
-                            using (var metafile = new Metafile(screenHdc, rectangle, MetafileFrameUnit.Pixel))
-                            {
-                                using (var graphics = Graphics.FromImage(metafile))
-                                {
-                                    var hdc = graphics.GetHdc();
-                                    OleDraw(webBrowser.ActiveXInstance, DVASPECT_CONTENT, hdc, ref rectangle);
-                                    graphics.ReleaseHdc(hdc);
-                                }
-                                // save the metafile as bitmap
-                                metafile.Save(FILE_NAME, ImageFormat.Png);
+                            webBrowser.Size = IMAGE_SIZE;
+                            // webBrowser.Document.Body.SetAttribute("scroll", "no");
+                            // webBrowser.ScrollBarsEnabled = false;
 
+                            Rectangle rectangle = new Rectangle(0, 0, webBrowser.Width, webBrowser.Height);
+
+                            // get reference DC
+                            using (Graphics screenGraphics = webBrowser?.CreateGraphics())
+                            {
+                                IntPtr screenHdc = screenGraphics.GetHdc();
+                                // create a metafile
+                                using (Metafile metafile = new Metafile(screenHdc, rectangle, MetafileFrameUnit.Pixel))
+                                {
+                                    using (Graphics graphics = Graphics.FromImage(metafile))
+                                    {
+                                        IntPtr hdc = graphics.GetHdc();
+                                        OleDraw(webBrowser.ActiveXInstance, DVASPECT_CONTENT, hdc, ref rectangle);
+                                        graphics.ReleaseHdc(hdc);
+                                    }
+                                    // save the metafile as bitmap
+                                    metafile?.Save(FILE_NAME, ImageFormat.Png);
+                                }
+                                screenGraphics?.ReleaseHdc(screenHdc);
                             }
-                            screenGraphics.ReleaseHdc(screenHdc);
+                        }
+                        catch (Exception ex)
+                        {
+                            Console.WriteLine($"{ex}");
                         }
                     });
 
                     // dispose of webBrowser
-                    apartment.Invoke(() => webBrowser.Dispose());
+                    apartment?.Invoke(() => webBrowser?.Dispose());
                     webBrowser = null;
                 }
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.ToString());
+                Console.WriteLine($"{ex}");
             }
             return new Bitmap(FILE_NAME);
         }
 
         // interop
-        const uint DVASPECT_CONTENT = 1;
+        private const uint DVASPECT_CONTENT = 1;
 
         [DllImport("ole32.dll", PreserveSig = false)]
-        static extern void OleDraw(
+        private static extern void OleDraw(
             [MarshalAs(UnmanagedType.IUnknown)] object pUnk,
             uint dwAspect,
             IntPtr hdcDraw,
@@ -99,11 +108,14 @@ namespace VolturaTextClock.Library
 
         // WebBrowser Feature Control
         // http://msdn.microsoft.com/en-us/library/ie/ee330733(v=vs.85).aspx
-        static void SetFeatureBrowserFeature(string feature, uint value)
+        private static void SetFeatureBrowserFeature(string feature, uint value)
         {
             if (LicenseManager.UsageMode != LicenseUsageMode.Runtime)
+            {
                 return;
-            var appName = AppDomain.CurrentDomain.FriendlyName;
+            }
+
+            string appName = AppDomain.CurrentDomain.FriendlyName;
             Registry.SetValue(@"HKEY_CURRENT_USER\Software\Microsoft\Internet Explorer\Main\FeatureControl\" + feature,
                 appName, value, RegistryValueKind.DWord);
         }
@@ -113,16 +125,16 @@ namespace VolturaTextClock.Library
     // more info: http://stackoverflow.com/a/21808747/1768303
     public class MessageLoopApartment : IDisposable
     {
-        Thread _thread; // the STA thread
+        private Thread _thread; // the STA thread
 
-        TaskScheduler _taskScheduler; // the STA thread's task scheduler
+        private TaskScheduler _taskScheduler; // the STA thread's task scheduler
 
-        public TaskScheduler TaskScheduler { get { return _taskScheduler; } }
+        public TaskScheduler TaskScheduler => _taskScheduler;
 
         /// <summary>MessageLoopApartment constructor</summary>
         public MessageLoopApartment()
         {
-            var tcs = new TaskCompletionSource<TaskScheduler>();
+            TaskCompletionSource<TaskScheduler> tcs = new TaskCompletionSource<TaskScheduler>();
 
             // start an STA thread and gets a task scheduler
             _thread = new Thread(startArg =>
@@ -132,7 +144,7 @@ namespace VolturaTextClock.Library
                     // handle Application.Idle just once
                     Application.Idle -= idleHandler;
                     // return the task scheduler
-                    tcs.SetResult(TaskScheduler.FromCurrentSynchronizationContext());
+                    tcs?.SetResult(TaskScheduler.FromCurrentSynchronizationContext());
                 }
 
                 // handle Application.Idle just once
@@ -145,7 +157,7 @@ namespace VolturaTextClock.Library
             _thread.SetApartmentState(ApartmentState.STA);
             _thread.IsBackground = true;
             _thread.Start();
-            _taskScheduler = tcs.Task.Result;
+            _taskScheduler = tcs?.Task.Result;
         }
 
         /// <summary>shutdown the STA thread</summary>
@@ -153,7 +165,7 @@ namespace VolturaTextClock.Library
         {
             if (_taskScheduler != null)
             {
-                var taskScheduler = _taskScheduler;
+                TaskScheduler taskScheduler = _taskScheduler;
                 _taskScheduler = null;
 
                 // execute Application.ExitThread() on the STA thread
@@ -163,7 +175,7 @@ namespace VolturaTextClock.Library
                     TaskCreationOptions.None,
                     taskScheduler).Wait();
 
-                _thread.Join();
+                _thread?.Join();
                 _thread = null;
             }
         }

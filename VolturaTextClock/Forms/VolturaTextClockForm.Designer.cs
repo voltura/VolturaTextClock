@@ -183,7 +183,7 @@ namespace VolturaTextClock
             this.MinimizeBox = false;
             this.Name = "VolturaTextClockForm";
             this.Text = "VolturaTextClock";
-            this.TransparencyKey = System.Drawing.Color.DarkGray;
+            this.TransparencyKey = System.Drawing.Color.Yellow;
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.VolturaTextClockForm_FormClosing);
             this.Load += new System.EventHandler(this.VolturaTextClockForm_Load);
             ((System.ComponentModel.ISupportInitialize)(this.optionsPicBox)).EndInit();
