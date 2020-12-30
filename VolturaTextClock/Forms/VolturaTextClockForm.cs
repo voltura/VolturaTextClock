@@ -179,7 +179,7 @@ namespace VolturaTextClock
         private void ClockTimer_Tick(object sender, EventArgs e)
         {
             clockTimer.Stop();
-         //   UpdateClockText();
+            UpdateClockText();
         }
 
         private void ClosePicBox_Click(object sender, EventArgs e)
@@ -209,7 +209,7 @@ namespace VolturaTextClock
             WindowState = FormWindowState.Minimized;
             ToogleButtons();
         }
-        /*
+        
         private const int CS_DROPSHADOW = 0x20000;
         protected override CreateParams CreateParams
         {
@@ -219,6 +219,6 @@ namespace VolturaTextClock
                 cp.ClassStyle |= CS_DROPSHADOW;
                 return cp;
             }
-        }*/
+        }
     }
 }
