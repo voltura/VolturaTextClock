@@ -59,7 +59,7 @@ namespace VolturaTextClock.Library
             }
 
             float scalePercent = scaleX;
-            string fontSize = "120%";
+            const string fontSize = "120%";
             string bodyWidth = $"{480.0f * scalePercent:#.}px";
             string bodyHeight = $"{480.0f * scalePercent:#.}px";
             string style = @"
