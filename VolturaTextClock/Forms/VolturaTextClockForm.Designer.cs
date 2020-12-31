@@ -131,7 +131,7 @@ namespace VolturaTextClock
             // clockPicBox
             // 
             this.clockPicBox.BackColor = System.Drawing.Color.Transparent;
-            this.clockPicBox.Image = ((System.Drawing.Image)(resources.GetObject("clockPicBox.Image")));
+           // this.clockPicBox.Image = ((System.Drawing.Image)(resources.GetObject("clockPicBox.Image")));
             this.clockPicBox.Location = new System.Drawing.Point(0, 0);
             this.clockPicBox.Margin = new System.Windows.Forms.Padding(0);
             this.clockPicBox.MinimumSize = new System.Drawing.Size(480, 480);

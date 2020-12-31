@@ -13,7 +13,7 @@ namespace VolturaTextClock.Library
     public class TextClock
     {
 
-        public static Bitmap GetImage(TextClockTheme theme)
+        public static void GetImage(TextClockTheme theme)
         {
             string FILE_NAME = theme.ClockImageFullPath;
             try
@@ -80,7 +80,7 @@ namespace VolturaTextClock.Library
                         }
                         catch (Exception ex)
                         {
-                            Console.WriteLine($"{ex}");
+                            Console.WriteLine($"Could not save clock image: {ex.Message}");
                         }
                     });
 
@@ -91,9 +91,9 @@ namespace VolturaTextClock.Library
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"{ex}");
+                Console.WriteLine($"Generic error getting clock image: {ex.Message}");
             }
-            return new Bitmap(FILE_NAME);
+            //return new Bitmap(FILE_NAME);
         }
 
         // interop

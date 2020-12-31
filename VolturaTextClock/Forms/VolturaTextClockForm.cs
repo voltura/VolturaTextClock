@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Drawing;
 using System.IO;
 using System.Windows.Forms;
 using VolturaTextClock.Library;
@@ -113,13 +114,22 @@ namespace VolturaTextClock
             }
             return path.Replace('\\', '/');
         }
+
         private void UpdateClockText()
         {
             if (Visible && (m_SettingsForm == null || m_SettingsForm.Visible == false))
             {
-                clockPicBox.Image = TextClock.GetImage(m_Theme);
+                TextClock.GetImage(m_Theme);
+                clockPicBox?.Image?.Dispose();
+                clockPicBox.Image = LoadBitmapUnlocked(m_Theme.ClockImageFullPath);
             }
             StartClockTimer();
+        }
+
+        private static Bitmap LoadBitmapUnlocked(string fileName)
+        {
+            using Bitmap bm = new Bitmap(fileName);
+            return new Bitmap(bm);
         }
 
         private void StartClockTimer()
