@@ -117,9 +117,8 @@ namespace VolturaTextClock
 
         private void UpdateClockText()
         {
-            if (Visible && (m_SettingsForm == null || m_SettingsForm.Visible == false))
+            if (Visible && (m_SettingsForm == null || m_SettingsForm.Visible == false) && TextClock.GetImage(m_Theme))
             {
-                TextClock.GetImage(m_Theme);
                 clockPicBox?.Image?.Dispose();
                 clockPicBox.Image = LoadBitmapUnlocked(m_Theme.ClockImageFullPath);
             }

@@ -3,6 +3,7 @@ using System;
 using System.ComponentModel;
 using System.Drawing;
 using System.Drawing.Imaging;
+using System.IO;
 using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
@@ -13,9 +14,11 @@ namespace VolturaTextClock.Library
     public class TextClock
     {
 
-        public static void GetImage(TextClockTheme theme)
+        public static bool GetImage(TextClockTheme theme)
         {
             string FILE_NAME = theme.ClockImageFullPath;
+            string TEMP_FILE_NAME = theme.ClockImageFullPath + ".TEMP";
+            bool result = false;
             try
             {
                 string HTML = TextClockHtml.GetHtml(theme);
@@ -73,7 +76,16 @@ namespace VolturaTextClock.Library
                                         graphics.ReleaseHdc(hdc);
                                     }
                                     // save the metafile as bitmap
-                                    metafile?.Save(FILE_NAME, ImageFormat.Png);
+                                    metafile?.Save(TEMP_FILE_NAME, ImageFormat.Png);
+                                    // compare files
+                                    FileInfo ORG_fi = new FileInfo(FILE_NAME);
+                                    FileInfo TEMP_fi = new FileInfo(TEMP_FILE_NAME);
+                                    if (File.Exists(FILE_NAME) == false || FilesAreEqual(ORG_fi, TEMP_fi) == false)
+                                    {
+                                        // replace original file with temp file
+                                        File.Copy(TEMP_FILE_NAME, FILE_NAME, true);
+                                        result = true;
+                                    }
                                 }
                                 screenGraphics?.ReleaseHdc(screenHdc);
                             }
@@ -93,7 +105,7 @@ namespace VolturaTextClock.Library
             {
                 Console.WriteLine($"Generic error getting clock image: {ex.Message}");
             }
-            //return new Bitmap(FILE_NAME);
+            return result;
         }
 
         // interop
@@ -118,6 +130,37 @@ namespace VolturaTextClock.Library
             string appName = AppDomain.CurrentDomain.FriendlyName;
             Registry.SetValue(@"HKEY_CURRENT_USER\Software\Microsoft\Internet Explorer\Main\FeatureControl\" + feature,
                 appName, value, RegistryValueKind.DWord);
+        }
+
+        const int BYTES_TO_READ = sizeof(Int64);
+
+        private static bool FilesAreEqual(FileInfo first, FileInfo second)
+        {
+            if (first.Length != second.Length)
+                return false;
+
+            if (string.Equals(first.FullName, second.FullName, StringComparison.OrdinalIgnoreCase))
+                return true;
+
+            int iterations = (int)Math.Ceiling((double)first.Length / BYTES_TO_READ);
+
+            using (FileStream fs1 = first.OpenRead())
+            using (FileStream fs2 = second.OpenRead())
+            {
+                byte[] one = new byte[BYTES_TO_READ];
+                byte[] two = new byte[BYTES_TO_READ];
+
+                for (int i = 0; i < iterations; i++)
+                {
+                    fs1.Read(one, 0, BYTES_TO_READ);
+                    fs2.Read(two, 0, BYTES_TO_READ);
+
+                    if (BitConverter.ToInt64(one, 0) != BitConverter.ToInt64(two, 0))
+                        return false;
+                }
+            }
+
+            return true;
         }
     }
 
