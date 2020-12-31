@@ -8,7 +8,7 @@
     <StartupObject>VolturaTextClock.Program</StartupObject>
     <Authors>Joakim Skoglund</Authors>
     <Company>Voltura AB</Company>
-    <Description>A Windows application that displays time as text</Description>
+    <Description>A Windows app that displays time as text</Description>
     <Copyright>Copyright 2020 Voltura AB</Copyright>
     <ApplicationIcon>VolturaTextClock.ico</ApplicationIcon>
     <EnableNETAnalyzers>true</EnableNETAnalyzers>
@@ -16,6 +16,8 @@
     <Version>1.0.7</Version>
     <ApplicationManifest>Properties\app.manifest</ApplicationManifest>
     <PackageIcon></PackageIcon>
+    <SignAssembly>true</SignAssembly>
+    <AssemblyOriginatorKeyFile>VolturaTextClock.snk.pfx</AssemblyOriginatorKeyFile>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">

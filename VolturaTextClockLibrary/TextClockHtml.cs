@@ -30,7 +30,7 @@ namespace VolturaTextClock.Library
                 {
                     sb.Append($"<z>{c}</z>");
                 }
-                var formattedTimepart = sb.ToString();
+                string formattedTimepart = sb.ToString();
                 m_Location = clockText01.LastIndexOf(formattedTimepart, StringComparison.Ordinal);
                 if (m_Location >= 0)
                 {
@@ -44,7 +44,7 @@ namespace VolturaTextClock.Library
             {
                 sb.Append($"<z>{c}</z>");
             }
-            var formattedHour = sb.ToString();
+            string formattedHour = sb.ToString();
             m_Location = clockText02.IndexOf(formattedHour, StringComparison.Ordinal);
             if (m_Location >= 0)
             {
@@ -52,12 +52,12 @@ namespace VolturaTextClock.Library
                 formattedHour = formattedHour.Replace("</z>", "</x>");
                 clockText02 = clockText02.Remove(m_Location, formattedHour.Length).Insert(m_Location, formattedHour);
             }
-            int DPI = Int32.Parse((string)Registry.GetValue(
-            @"HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\ThemeManager",
-            "LastLoadedDPI", "96"));
             float scaleX;
             using (Graphics g = Graphics.FromImage(new Bitmap(10, 10)))
+            {
                 scaleX = g.DpiX / 96.0f;
+            }
+
             float scalePercent = scaleX;
             string fontSize = "120%";
             string bodyWidth = $"{480.0f * scalePercent:#.}px";

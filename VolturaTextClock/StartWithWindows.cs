@@ -21,7 +21,9 @@ namespace VolturaTextClock
                 else
                 {
                     if (regRun?.GetValue(Application.ProductName) != null)
+                    {
                         regRun?.DeleteValue(Application.ProductName);
+                    }
                 }
                 registryKey?.Flush();
             }

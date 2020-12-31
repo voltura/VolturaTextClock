@@ -132,15 +132,19 @@ namespace VolturaTextClock.Library
                 appName, value, RegistryValueKind.DWord);
         }
 
-        const int BYTES_TO_READ = sizeof(Int64);
+        private const int BYTES_TO_READ = sizeof(long);
 
         private static bool FilesAreEqual(FileInfo first, FileInfo second)
         {
             if (first.Length != second.Length)
+            {
                 return false;
+            }
 
             if (string.Equals(first.FullName, second.FullName, StringComparison.OrdinalIgnoreCase))
+            {
                 return true;
+            }
 
             int iterations = (int)Math.Ceiling((double)first.Length / BYTES_TO_READ);
 
@@ -156,7 +160,9 @@ namespace VolturaTextClock.Library
                     fs2.Read(two, 0, BYTES_TO_READ);
 
                     if (BitConverter.ToInt64(one, 0) != BitConverter.ToInt64(two, 0))
+                    {
                         return false;
+                    }
                 }
             }
 

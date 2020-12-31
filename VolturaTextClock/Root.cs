@@ -4,7 +4,7 @@ namespace VolturaTextClock
 {
     public class Root
     {
-        [JsonProperty("appSettings")] 
+        [JsonProperty("appSettings")]
         public AppSettings AppSettings { get; set; }
     }
 

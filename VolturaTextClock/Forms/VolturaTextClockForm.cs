@@ -195,7 +195,7 @@ namespace VolturaTextClock
 
         private void ClosePicBox_Click(object sender, EventArgs e)
         {
-            if (DialogResult.Yes == MessageBox.Show(this, "Do you want to close the application?", 
+            if (DialogResult.Yes == MessageBox.Show(this, "Do you want to close the application?",
                 "Close application", MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1))
             {
                 Application.Exit();
@@ -209,7 +209,7 @@ namespace VolturaTextClock
 
         private void PinPicBox_Click(object sender, EventArgs e)
         {
-            TopMost = !TopMost;            
+            TopMost = !TopMost;
             pinPicBox.Image = TopMost ? Properties.Resources.unpin : Properties.Resources.pin;
             AppConfig.AddOrUpdateAppSetting("alwaysOnTop", TopMost);
             ToogleButtons();
@@ -220,7 +220,7 @@ namespace VolturaTextClock
             WindowState = FormWindowState.Minimized;
             ToogleButtons();
         }
-        
+
         private const int CS_DROPSHADOW = 0x20000;
         protected override CreateParams CreateParams
         {
