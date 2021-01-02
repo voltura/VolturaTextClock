@@ -21,7 +21,7 @@ namespace VolturaTextClock.Library
             string m_HourText;
             int m_Location;
             string m_ImagePath = theme.BackgroundImagePath;
-
+            List<string> swedishClockWords = ClockCalculator.GetTextTime(theme.Language);
             m_TimeText = ClockCalculator.GetEvenFiveMinuteTimeNoHour();
             m_HourText = ClockCalculator.GetEvenFiveMinuteTimeHour();
             string clockText01 = CLOCK_TEXT_01;

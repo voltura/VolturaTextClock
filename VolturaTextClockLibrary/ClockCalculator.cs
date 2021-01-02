@@ -5,6 +5,61 @@ namespace VolturaTextClock.Library
 {
     internal static class ClockCalculator
     {
+        internal static List<string> GetTextTime(TextClockTheme.LANGUAGE language)
+        {
+            (int hour, int minute) = GetHourAndMinute();
+            return GetTextTime(language, hour, minute);
+        }
+
+        private static (int, int) GetHourAndMinute()
+        {
+            DateTime exactTime = DateTime.Now;
+            int minute = 5 * (int)Math.Round(exactTime.Minute / 5.0);
+            return ((minute > 20) ? ((exactTime.Hour + 1 <= 24) ? exactTime.Hour + 1 : 1) : exactTime.Hour, minute);
+        }
+
+        private static List<string> GetTextTime(TextClockTheme.LANGUAGE language, int hour, int minute)
+        {
+            List<string> timeList = new List<string>();
+            if (language == TextClockTheme.LANGUAGE.Swedish)
+            {
+                timeList.Add("KLOCKAN");
+                timeList.Add("ÄR");
+                if (minute == 0 || minute == 60) // no minutes
+                {
+                    return timeList;
+                }
+                if (minute <= 20) // (min) över hour
+                {
+                    timeList.Add(GetMin(minute));
+                    timeList.Add("ÖVER");
+                }
+                else if (minute == 25) // fem i halv (hour + 1)
+                {
+                    timeList.Add(GetMin(5));
+                    timeList.Add("I");
+                    timeList.Add("HALV");
+                }
+                else if (minute == 30) // halv (hour + 1)
+                {
+                    timeList.Add("HALV");
+                }
+                else if (minute == 35) // fem över halv (hour + 1)
+                {
+                    timeList.Add(GetMin(5));
+                    timeList.Add("ÖVER");
+                    timeList.Add("HALV");
+                }
+                else if (minute > 35) // (min) i (hour + 1)
+                {
+                    timeList.Add(GetMin(minute));
+                    timeList.Add("I");
+                }
+                timeList.Add(GetHour(hour));
+            }
+            return timeList;
+        }
+
         /// <summary>
         /// Get current time in text excluding hour
         /// </summary>

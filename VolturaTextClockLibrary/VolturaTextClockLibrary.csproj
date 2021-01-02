@@ -49,6 +49,7 @@
   <ItemGroup>
     <Compile Include="ClockCalculator.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SwedishText.cs" />
     <Compile Include="TextClockHtml.cs" />
     <Compile Include="TextClockTheme.cs" />
     <Compile Include="TextClock.cs" />
