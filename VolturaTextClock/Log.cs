@@ -16,6 +16,26 @@ namespace VolturaTextClock
     /// </summary>
     internal static class Log
     {
+        #region Static variables
+
+        private static readonly string logFile = Path.GetFileNameWithoutExtension(Application.ExecutablePath) + ".log";
+        private static readonly string appDataFolder = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
+        private static readonly string logFileFullPath = Path.Combine(appDataFolder, logFile);
+
+        #endregion
+
+        #region Internal static constructor
+
+        /// <summary>
+        ///     Constructor - Init log
+        /// </summary>
+        static Log()
+        {
+            Init();
+        }
+
+        #endregion
+
         #region Internal methods
 
         /// <summary>
@@ -23,13 +43,10 @@ namespace VolturaTextClock
         /// </summary>
         internal static void Init()
         {
-            FileStream fs = null;
             try
             {
                 Trace.Listeners.Clear();
-                string logFile = Path.GetFileNameWithoutExtension(Application.ExecutablePath) + ".log";
-                string appDataFolder = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
-                fs = new FileStream(Path.Combine(appDataFolder, logFile), FileMode.Append, FileAccess.Write, FileShare.ReadWrite | FileShare.Delete, 1024, FileOptions.WriteThrough);
+                FileStream fs = new FileStream(logFileFullPath, FileMode.Append, FileAccess.Write, FileShare.ReadWrite | FileShare.Delete, 1024, FileOptions.WriteThrough);
                 TextWriterTraceListener traceListener = new TextWriterTraceListener(fs);
                 Trace.Listeners.Add(traceListener);
                 Trace.AutoFlush = true;
@@ -37,7 +54,6 @@ namespace VolturaTextClock
             }
             catch (Exception ex)
             {
-                fs?.Dispose();
                 Debug.WriteLine(ex);
             }
         }
@@ -60,21 +76,19 @@ namespace VolturaTextClock
         /// </summary>
         internal static void Truncate()
         {
-            Trace.Flush();
-            Trace.Close();
-            Trace.Listeners.Clear();
             try
             {
-                string logFile = Path.GetFileNameWithoutExtension(Application.ExecutablePath) + ".log";
-                string appDataFolder = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
-                FileInfo fi = new FileInfo(Path.Combine(appDataFolder, logFile));
+                Trace.Flush();
+                Trace.Close();
+                Trace.Listeners.Clear();
+                FileInfo fi = new FileInfo(logFileFullPath);
                 if (fi.Exists)
                 {
-                    int trimSize = AppConfig.GetValue<int>("logFileSizeMB", 10) * 1024 * 1024;
+                    int trimSize = AppConfig.GetValue("logFileSizeMB", 10) * 1024 * 1024;
                     if (fi.Length > trimSize)
                     {
                         using MemoryStream ms = new MemoryStream(trimSize);
-                        using FileStream s = new FileStream(logFile, FileMode.Open, FileAccess.ReadWrite);
+                        using FileStream s = new FileStream(logFileFullPath, FileMode.Open, FileAccess.ReadWrite);
                         s.Seek(-trimSize, SeekOrigin.End);
                         byte[] bytes = new byte[trimSize];
                         s.Read(bytes, 0, trimSize);
@@ -101,32 +115,28 @@ namespace VolturaTextClock
 
         internal static void Show()
         {
-            string logFile = Path.GetFileNameWithoutExtension(Application.ExecutablePath) + ".log";
-            string appDataFolder = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
-            logFile = Path.Combine(appDataFolder, logFile);
-            FileInfo fi = new FileInfo(logFile);
-            if (!fi.Exists)
-            {
-                return;
-            }
-
-            Process process = null;
             try
             {
-#pragma warning disable IDE0017 // Simplify object initialization
-                process = new Process();
-#pragma warning restore IDE0017 // Simplify object initialization
-                process.StartInfo = new ProcessStartInfo(logFile) { UseShellExecute = true };
-                process.Start();
+                if (File.Exists(logFileFullPath))
+                {
+                    using Process process = new Process() { StartInfo = new ProcessStartInfo(logFileFullPath) { UseShellExecute = true } };
+                    process.Start();
+                }
             }
             catch (InvalidOperationException ex)
             {
                 Error = ex;
             }
-            finally
-            {
-                process?.Dispose();
-            }
+        }
+
+        internal static void LogCaller()
+        {
+            StackTrace stackTrace = new StackTrace();
+            string method = stackTrace.GetFrame(1).GetMethod().Name;
+            string callee = stackTrace.GetFrame(2).GetMethod().Name;
+            string infoText = $"{method} called from {callee}";
+            Info = infoText;
+            Debug.WriteLine(infoText);
         }
 
         #endregion
@@ -143,9 +153,7 @@ namespace VolturaTextClock
             {
                 try
                 {
-                    Trace.TraceInformation("{0} {1}",
-                        DateTime.Now.ToString("yyyy-MM-dd hh:mm:ss.fff", CultureInfo.InvariantCulture),
-                        value);
+                    Trace.TraceInformation($"{DateTime.Now.ToString("yyyy-MM-dd hh:mm:ss.fff", CultureInfo.InvariantCulture)} {value}");
                 }
                 catch (Exception ex)
                 {
@@ -159,14 +167,12 @@ namespace VolturaTextClock
         /// </summary>
         internal static Exception Error
         {
-            private get => new ArgumentNullException("VolturaTextClock");
+            private get => new ArgumentNullException(logFile);
             set
             {
                 try
                 {
-                    Trace.TraceError("{0} {1}",
-                        DateTime.Now.ToString("yyyy-MM-dd hh:mm:ss.fff", CultureInfo.InvariantCulture),
-                        value);
+                    Trace.TraceError($"{DateTime.Now.ToString("yyyy-MM-dd hh:mm:ss.fff", CultureInfo.InvariantCulture)} {value}");
                 }
                 catch (Exception ex)
                 {
@@ -180,24 +186,8 @@ namespace VolturaTextClock
         /// </summary>
         internal static string ErrorString
         {
-            // ReSharper disable once UnusedMember.Local
-            private get => "VolturaTextClock";
-            set => Trace.TraceError("{0} {1}",
-                    DateTime.Now.ToString("yyyy-MM-dd hh:mm:ss.fff", CultureInfo.InvariantCulture),
-                    value);
-        }
-
-        #endregion
-
-        #region Internal static log methods
-
-        internal static void LogCaller()
-        {
-            StackTrace stackTrace = new StackTrace();
-            string method = stackTrace.GetFrame(1).GetMethod().Name;
-            string callee = stackTrace.GetFrame(2).GetMethod().Name;
-            Info = $"{method} called from {callee}";
-            Debug.WriteLine($"{method} called from {callee}");
+            private get => string.Empty;
+            set => Trace.TraceError($"{DateTime.Now.ToString("yyyy-MM-dd hh:mm:ss.fff", CultureInfo.InvariantCulture)} {value}");
         }
 
         #endregion

@@ -115,9 +115,9 @@ namespace VolturaTextClock
             return path.Replace('\\', '/');
         }
 
-        private void UpdateClockText()
+        private void UpdateClockText(bool force = false)
         {
-            if (Visible && (m_SettingsForm == null || m_SettingsForm.Visible == false) && TextClock.GetImage(m_Theme))
+            if (Visible && (m_SettingsForm == null || m_SettingsForm.Visible == false) && ((TextClock.GetImage(m_Theme) == true) || (force == true)))
             {
                 clockPicBox?.Image?.Dispose();
                 clockPicBox.Image = LoadBitmapUnlocked(m_Theme.ClockImageFullPath);
@@ -156,8 +156,7 @@ namespace VolturaTextClock
             Visible = true;
             BackgroundImage = Properties.Resources.background;
             BackgroundImageLayout = ImageLayout.Zoom;
-            ImageOverlay.SetGCSettings();
-            UpdateClockText();
+            UpdateClockText(true);
         }
 
         private void OptionsPicBox_Click(object sender, EventArgs e)

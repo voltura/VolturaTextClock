@@ -4,6 +4,7 @@ using Newtonsoft.Json.Linq;
 using System;
 using System.IO;
 using System.Reflection;
+using System.Runtime;
 using System.Windows.Forms;
 
 namespace VolturaTextClock
@@ -20,14 +21,28 @@ namespace VolturaTextClock
         [STAThread]
         private static void Main()
         {
-            Log.Init();
+            Log.Info = "===Starting application===";
+            AppDomain.CurrentDomain.UnhandledException += UnhandledExceptionTrapper;
+            SetGCSettings();
             SetupAppConfig();
             UpdateConfig();
             Application.SetHighDpiMode(HighDpiMode.PerMonitorV2);
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Log.Info = "Starting form...";
             Application.Run(new VolturaTextClockForm());
+        }
+
+        internal static void SetGCSettings()
+        {
+            GCSettings.LargeObjectHeapCompactionMode = GCLargeObjectHeapCompactionMode.CompactOnce;
+            GCSettings.LatencyMode = GCLatencyMode.Batch;
+        }
+
+        private static void UnhandledExceptionTrapper(object sender, UnhandledExceptionEventArgs e)
+        {
+            Log.Error = (Exception)e.ExceptionObject;
+            Log.Close("=== Application ended ===");
+            Environment.Exit(1);
         }
 
         private static void UpdateConfig()

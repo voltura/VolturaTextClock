@@ -16,7 +16,7 @@
     <Version>1.0.7</Version>
     <ApplicationManifest>Properties\app.manifest</ApplicationManifest>
     <PackageIcon></PackageIcon>
-    <SignAssembly>true</SignAssembly>
+    <SignAssembly>false</SignAssembly>
     <AssemblyOriginatorKeyFile>VolturaTextClock.snk.pfx</AssemblyOriginatorKeyFile>
   </PropertyGroup>
 
