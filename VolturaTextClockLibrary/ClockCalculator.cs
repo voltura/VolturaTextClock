@@ -5,6 +5,10 @@ namespace VolturaTextClock.Library
 {
     internal static class ClockCalculator
     {
+        /// <summary>
+        /// Get current time in text excluding hour
+        /// </summary>
+        /// <returns></returns>
         public static List<string> GetEvenFiveMinuteTimeNoHour()
         {
             int minute = 5 * (int)Math.Round(DateTime.Now.Minute / 5.0);
@@ -46,6 +50,10 @@ namespace VolturaTextClock.Library
             return timeList;
         }
 
+        /// <summary>
+        /// Get current time hour part
+        /// </summary>
+        /// <returns></returns>
         public static string GetEvenFiveMinuteTimeHour()
         {
             DateTime exactTime = DateTime.Now;
