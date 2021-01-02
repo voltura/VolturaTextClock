@@ -156,7 +156,6 @@ namespace VolturaTextClock
             Visible = true;
             BackgroundImage = Properties.Resources.background;
             BackgroundImageLayout = ImageLayout.Zoom;
-            ImageOverlay.SetGCSettings();
             UpdateClockText(true);
         }
 

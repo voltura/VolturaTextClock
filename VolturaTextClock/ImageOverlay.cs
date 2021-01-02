@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Drawing;
-using System.Runtime;
 using System.Windows.Forms;
 
 namespace VolturaTextClock
@@ -39,12 +38,6 @@ namespace VolturaTextClock
             Log.LogCaller();
             GC.Collect();
             GC.WaitForFullGCComplete(1000);
-        }
-
-        internal static void SetGCSettings()
-        {
-            GCSettings.LargeObjectHeapCompactionMode = GCLargeObjectHeapCompactionMode.CompactOnce;
-            GCSettings.LatencyMode = GCLatencyMode.Batch;
         }
     }
 }
