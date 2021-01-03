@@ -54,7 +54,7 @@ namespace VolturaTextClock
                 int tmpTop = Convert.ToInt32(formLeftAndTop[1]);
                 if (tmpTop >= 0)
                 {
-                    Location = new System.Drawing.Point(tmpLeft, tmpTop);
+                    Location = new Point(tmpLeft, tmpTop);
                 }
             }
         }
