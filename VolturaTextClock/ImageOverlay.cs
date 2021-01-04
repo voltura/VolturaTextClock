@@ -12,8 +12,6 @@ namespace VolturaTextClock
             try
             {
                 using Bitmap c = new Bitmap(pb.Image);
-                //pb.InitialImage?.Dispose();
-                //pb.BackgroundImage?.Dispose();
                 pb.InitialImage = ToolStripRenderer.CreateDisabledImage(c);
                 pb.BackgroundImage = pb.Image;
                 pb.Image = pb.InitialImage;

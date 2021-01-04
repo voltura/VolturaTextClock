@@ -19,11 +19,7 @@ namespace VolturaTextClock
             InitializeComponent();
             SetTheme();
             UpdateUI();
-            ImageOverlay.InitializeImage(ref optionsPicBox);
-            ImageOverlay.InitializeImage(ref settingsPicBox);
-            ImageOverlay.InitializeImage(ref minimizePicBox);
-            ImageOverlay.InitializeImage(ref closePicBox);
-        }
+         }
 
         public SettingsForm ApplicationSettingsForm
         {
@@ -58,7 +54,7 @@ namespace VolturaTextClock
                 int tmpTop = Convert.ToInt32(formLeftAndTop[1]);
                 if (tmpTop >= 0)
                 {
-                    Location = new System.Drawing.Point(tmpLeft, tmpTop);
+                    Location = new Point(tmpLeft, tmpTop);
                 }
             }
         }
@@ -67,6 +63,15 @@ namespace VolturaTextClock
         {
             clockPicBox.MoveOtherWithMouse(this);
             clockPicBox.SendToBack();
+            pinPicBox.BackgroundImageLayout =
+            closePicBox.BackgroundImageLayout =
+            minimizePicBox.BackgroundImageLayout =
+            settingsPicBox.BackgroundImageLayout = 
+            optionsPicBox.BackgroundImageLayout = ImageLayout.Zoom;
+            ImageOverlay.InitializeImage(ref optionsPicBox);
+            ImageOverlay.InitializeImage(ref settingsPicBox);
+            ImageOverlay.InitializeImage(ref minimizePicBox);
+            ImageOverlay.InitializeImage(ref closePicBox);
         }
 
         private void ShowSettingsForm()
