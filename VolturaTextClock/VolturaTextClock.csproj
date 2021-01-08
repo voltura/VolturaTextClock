@@ -13,7 +13,7 @@
     <ApplicationIcon>VolturaTextClock.ico</ApplicationIcon>
     <EnableNETAnalyzers>true</EnableNETAnalyzers>
     <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
-    <Version>1.0.7</Version>
+    <Version>1.0.8</Version>
     <ApplicationManifest>Properties\app.manifest</ApplicationManifest>
     <PackageIcon></PackageIcon>
     <SignAssembly>false</SignAssembly>
