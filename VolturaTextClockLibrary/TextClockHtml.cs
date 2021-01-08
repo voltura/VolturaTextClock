@@ -73,7 +73,7 @@ body {
     height: " + bodyHeight + @";
     width: " + bodyWidth + @";
     font-size: " + fontSize + @";
-    font-family: 'Courier New', Courier, monospace;
+    font-family: 'Verdana';//'Courier New', Courier, monospace;
     font-weight: normal;
     background-image: url('file:///" + m_ImagePath + @"');
     background-repeat: no-repeat;
