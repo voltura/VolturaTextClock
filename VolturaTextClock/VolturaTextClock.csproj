@@ -9,7 +9,7 @@
     <Authors>Joakim Skoglund</Authors>
     <Company>Voltura AB</Company>
     <Description>A Windows app that displays time as text</Description>
-    <Copyright>Copyright 2020 Voltura AB</Copyright>
+    <Copyright>Copyright 2022 Voltura AB</Copyright>
     <ApplicationIcon>VolturaTextClock.ico</ApplicationIcon>
     <EnableNETAnalyzers>true</EnableNETAnalyzers>
     <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
@@ -18,6 +18,7 @@
     <PackageIcon></PackageIcon>
     <SignAssembly>false</SignAssembly>
     <AssemblyOriginatorKeyFile>VolturaTextClock.snk.pfx</AssemblyOriginatorKeyFile>
+    <NeutralLanguage>en</NeutralLanguage>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
@@ -47,9 +48,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.Extensions.Configuration" Version="5.0.0" />
-    <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="5.0.0" />
-    <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
+    <PackageReference Include="Microsoft.Extensions.Configuration" Version="6.0.1" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="6.0.0" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
   </ItemGroup>
 
   <ItemGroup>
