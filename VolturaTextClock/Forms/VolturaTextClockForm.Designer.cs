@@ -134,7 +134,7 @@ namespace VolturaTextClock
            // this.clockPicBox.Image = ((System.Drawing.Image)(resources.GetObject("clockPicBox.Image")));
             this.clockPicBox.Location = new System.Drawing.Point(0, 0);
             this.clockPicBox.Margin = new System.Windows.Forms.Padding(0);
-            this.clockPicBox.MinimumSize = new System.Drawing.Size(480, 480);
+            this.clockPicBox.MinimumSize = System.Drawing.Size.Empty;
             this.clockPicBox.Name = "clockPicBox";
             this.clockPicBox.Size = new System.Drawing.Size(480, 480);
             this.clockPicBox.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
@@ -165,7 +165,7 @@ namespace VolturaTextClock
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
-            this.AutoSize = true;
+            this.AutoSize = false;
             this.BackColor = System.Drawing.Color.Black;
             this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
             this.ClientSize = new System.Drawing.Size(480, 480);
@@ -180,7 +180,7 @@ namespace VolturaTextClock
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.Margin = new System.Windows.Forms.Padding(0);
             this.MaximizeBox = false;
-            this.MinimizeBox = false;
+            this.MinimizeBox = true;
             this.Name = "VolturaTextClockForm";
             this.Text = "VolturaTextClock";
             this.TransparencyKey = System.Drawing.Color.Yellow;

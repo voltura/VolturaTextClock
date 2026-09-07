@@ -1,252 +1,97 @@
-﻿using System.ComponentModel;
+using System;
+using System.Drawing;
 using System.Windows.Forms;
-using VolturaTextClock.Forms.Controls;
+using VolturaTextClock.Library;
+using static VolturaTextClock.Program;
 
 namespace VolturaTextClock
 {
-    partial class SettingsForm
+    public partial class SettingsForm
     {
-        /// <summary>
-        /// Required designer variable.
-        /// </summary>
-        private IContainer components = null;
-
-        /// <summary>
-        /// Clean up any resources being used.
-        /// </summary>
-        /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
-        protected override void Dispose(bool disposing)
-        {
-            if (disposing && (components != null))
-            {
-                components.Dispose();
-            }
-            base.Dispose(disposing);
-        }
-
-        #region Windows Form Designer generated code
-
-        /// <summary>
-        /// Required method for Designer support - do not modify
-        /// the contents of this method with the code editor.
-        /// </summary>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters", MessageId = "System.Windows.Forms.Control.set_Text(System.String)")]
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(SettingsForm));
-            this.settingsPanel = new System.Windows.Forms.Panel();
-            this.btnSave = new System.Windows.Forms.Button();
-            this.chkStartWithWindows = new System.Windows.Forms.CheckBox();
-            this.chkAlwaysOnTop = new System.Windows.Forms.CheckBox();
-            this.chkStartMinimized = new System.Windows.Forms.CheckBox();
-            this.lblSettingsTitle = new System.Windows.Forms.Label();
-            this.minimizePanelFrame = new System.Windows.Forms.Panel();
-            this.minimizePanel = new System.Windows.Forms.Panel();
-            this.titleIcon = new System.Windows.Forms.PictureBox();
-            this.settingsPanel.SuspendLayout();
-            this.minimizePanelFrame.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.titleIcon)).BeginInit();
-            this.SuspendLayout();
-            // 
-            // settingsPanel
-            // 
-            this.settingsPanel.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.settingsPanel.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(73)))), ((int)(((byte)(76)))), ((int)(((byte)(76)))));
-            this.settingsPanel.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("settingsPanel.BackgroundImage")));
-            this.settingsPanel.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
-            this.settingsPanel.Controls.Add(this.btnSave);
-            this.settingsPanel.Controls.Add(this.chkStartWithWindows);
-            this.settingsPanel.Controls.Add(this.chkAlwaysOnTop);
-            this.settingsPanel.Controls.Add(this.chkStartMinimized);
-            this.settingsPanel.Location = new System.Drawing.Point(7, 74);
-            this.settingsPanel.Margin = new System.Windows.Forms.Padding(0);
-            this.settingsPanel.Name = "settingsPanel";
-            this.settingsPanel.Size = new System.Drawing.Size(500, 498);
-            this.settingsPanel.TabIndex = 2;
-            // 
-            // btnSave
-            // 
-            this.btnSave.BackColor = System.Drawing.Color.DeepSkyBlue;
-            this.btnSave.FlatAppearance.BorderColor = System.Drawing.Color.DeepSkyBlue;
-            this.btnSave.FlatAppearance.MouseDownBackColor = System.Drawing.Color.DeepSkyBlue;
-            this.btnSave.FlatAppearance.MouseOverBackColor = System.Drawing.Color.LightBlue;
-            this.btnSave.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnSave.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.btnSave.Location = new System.Drawing.Point(325, 425);
-            this.btnSave.Margin = new System.Windows.Forms.Padding(6, 5, 6, 5);
-            this.btnSave.Name = "btnSave";
-            this.btnSave.Size = new System.Drawing.Size(165, 60);
-            this.btnSave.TabIndex = 7;
-            this.btnSave.Text = "Close";
-            this.btnSave.TextAlign = System.Drawing.ContentAlignment.TopCenter;
-            this.btnSave.UseVisualStyleBackColor = false;
-            this.btnSave.Click += new System.EventHandler(this.Save_Click);
-            // 
-            // chkStartWithWindows
-            // 
-            this.chkStartWithWindows.AutoSize = true;
-            this.chkStartWithWindows.BackColor = System.Drawing.Color.Black;
-            this.chkStartWithWindows.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("chkStartWithWindows.BackgroundImage")));
-            this.chkStartWithWindows.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
-            this.chkStartWithWindows.Checked = true;
-            this.chkStartWithWindows.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.chkStartWithWindows.FlatAppearance.BorderColor = System.Drawing.Color.DeepSkyBlue;
-            this.chkStartWithWindows.FlatAppearance.BorderSize = 2;
-            this.chkStartWithWindows.FlatAppearance.CheckedBackColor = System.Drawing.Color.DeepSkyBlue;
-            this.chkStartWithWindows.FlatAppearance.MouseDownBackColor = System.Drawing.Color.DeepSkyBlue;
-            this.chkStartWithWindows.FlatAppearance.MouseOverBackColor = System.Drawing.Color.LightBlue;
-            this.chkStartWithWindows.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.chkStartWithWindows.Font = new System.Drawing.Font("Segoe UI Semibold", 10.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.chkStartWithWindows.Location = new System.Drawing.Point(24, 21);
-            this.chkStartWithWindows.Margin = new System.Windows.Forms.Padding(6, 5, 6, 5);
-            this.chkStartWithWindows.Name = "chkStartWithWindows";
-            this.chkStartWithWindows.Size = new System.Drawing.Size(188, 46);
-            this.chkStartWithWindows.TabIndex = 0;
-            this.chkStartWithWindows.Text = "Auto start";
-            this.chkStartWithWindows.UseVisualStyleBackColor = false;
-            // 
-            // chkAlwaysOnTop
-            // 
-            this.chkAlwaysOnTop.AutoSize = true;
-            this.chkAlwaysOnTop.BackColor = System.Drawing.Color.Black;
-            this.chkAlwaysOnTop.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("chkAlwaysOnTop.BackgroundImage")));
-            this.chkAlwaysOnTop.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
-            this.chkAlwaysOnTop.Checked = true;
-            this.chkAlwaysOnTop.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.chkAlwaysOnTop.FlatAppearance.BorderColor = System.Drawing.Color.DeepSkyBlue;
-            this.chkAlwaysOnTop.FlatAppearance.BorderSize = 2;
-            this.chkAlwaysOnTop.FlatAppearance.CheckedBackColor = System.Drawing.Color.DeepSkyBlue;
-            this.chkAlwaysOnTop.FlatAppearance.MouseDownBackColor = System.Drawing.Color.DeepSkyBlue;
-            this.chkAlwaysOnTop.FlatAppearance.MouseOverBackColor = System.Drawing.Color.LightBlue;
-            this.chkAlwaysOnTop.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.chkAlwaysOnTop.Font = new System.Drawing.Font("Segoe UI Semibold", 10.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.chkAlwaysOnTop.Location = new System.Drawing.Point(24, 163);
-            this.chkAlwaysOnTop.Margin = new System.Windows.Forms.Padding(6, 5, 6, 5);
-            this.chkAlwaysOnTop.Name = "chkAlwaysOnTop";
-            this.chkAlwaysOnTop.Size = new System.Drawing.Size(248, 46);
-            this.chkAlwaysOnTop.TabIndex = 3;
-            this.chkAlwaysOnTop.Text = "Always on top";
-            this.chkAlwaysOnTop.UseVisualStyleBackColor = false;
-            // 
-            // chkStartMinimized
-            // 
-            this.chkStartMinimized.AutoSize = true;
-            this.chkStartMinimized.BackColor = System.Drawing.Color.Black;
-            this.chkStartMinimized.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("chkStartMinimized.BackgroundImage")));
-            this.chkStartMinimized.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
-            this.chkStartMinimized.Checked = true;
-            this.chkStartMinimized.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.chkStartMinimized.FlatAppearance.BorderColor = System.Drawing.Color.DeepSkyBlue;
-            this.chkStartMinimized.FlatAppearance.BorderSize = 2;
-            this.chkStartMinimized.FlatAppearance.CheckedBackColor = System.Drawing.Color.DeepSkyBlue;
-            this.chkStartMinimized.FlatAppearance.MouseDownBackColor = System.Drawing.Color.DeepSkyBlue;
-            this.chkStartMinimized.FlatAppearance.MouseOverBackColor = System.Drawing.Color.LightBlue;
-            this.chkStartMinimized.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.chkStartMinimized.Font = new System.Drawing.Font("Segoe UI Semibold", 10.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.chkStartMinimized.Location = new System.Drawing.Point(24, 91);
-            this.chkStartMinimized.Margin = new System.Windows.Forms.Padding(6, 5, 6, 5);
-            this.chkStartMinimized.Name = "chkStartMinimized";
-            this.chkStartMinimized.Size = new System.Drawing.Size(262, 46);
-            this.chkStartMinimized.TabIndex = 2;
-            this.chkStartMinimized.Text = "Start in Taskbar";
-            this.chkStartMinimized.UseVisualStyleBackColor = false;
-            this.chkStartMinimized.Visible = false;
-            // 
-            // lblSettingsTitle
-            // 
-            this.lblSettingsTitle.Dock = System.Windows.Forms.DockStyle.Top;
-            this.lblSettingsTitle.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.lblSettingsTitle.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.lblSettingsTitle.Location = new System.Drawing.Point(0, 0);
-            this.lblSettingsTitle.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
-            this.lblSettingsTitle.Name = "lblSettingsTitle";
-            this.lblSettingsTitle.Padding = new System.Windows.Forms.Padding(60, 0, 0, 0);
-            this.lblSettingsTitle.Size = new System.Drawing.Size(517, 74);
-            this.lblSettingsTitle.TabIndex = 1;
-            this.lblSettingsTitle.Text = "Settings";
-            this.lblSettingsTitle.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.lblSettingsTitle.MouseDown += new System.Windows.Forms.MouseEventHandler(this.SettingsTitle_MouseDown);
-            this.lblSettingsTitle.MouseMove += new System.Windows.Forms.MouseEventHandler(this.SettingsTitle_MouseMove);
-            // 
-            // minimizePanelFrame
-            // 
-            this.minimizePanelFrame.Controls.Add(this.minimizePanel);
-            this.minimizePanelFrame.Location = new System.Drawing.Point(510, 0);
-            this.minimizePanelFrame.Margin = new System.Windows.Forms.Padding(6, 5, 6, 5);
-            this.minimizePanelFrame.Name = "minimizePanelFrame";
-            this.minimizePanelFrame.Size = new System.Drawing.Size(67, 74);
-            this.minimizePanelFrame.TabIndex = 3;
-            this.minimizePanelFrame.Click += new System.EventHandler(this.MinimizePanelFrame_Click);
-            this.minimizePanelFrame.MouseEnter += new System.EventHandler(this.MinimizePanel_MouseEnter);
-            this.minimizePanelFrame.MouseLeave += new System.EventHandler(this.MinimizePanel_MouseLeave);
-            // 
-            // minimizePanel
-            // 
-            this.minimizePanel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.minimizePanel.BackColor = System.Drawing.Color.White;
-            this.minimizePanel.Location = new System.Drawing.Point(14, 16);
-            this.minimizePanel.Margin = new System.Windows.Forms.Padding(0);
-            this.minimizePanel.Name = "minimizePanel";
-            this.minimizePanel.Size = new System.Drawing.Size(46, 17);
-            this.minimizePanel.TabIndex = 3;
-            this.minimizePanel.Click += new System.EventHandler(this.MinimizePanel_Click);
-            this.minimizePanel.MouseEnter += new System.EventHandler(this.MinimizePanel_MouseEnter);
-            // 
-            // titleIcon
-            // 
-            this.titleIcon.BackColor = System.Drawing.Color.Transparent;
-            this.titleIcon.Image = ((System.Drawing.Image)(resources.GetObject("titleIcon.Image")));
-            this.titleIcon.Location = new System.Drawing.Point(7, 0);
-            this.titleIcon.Margin = new System.Windows.Forms.Padding(6, 5, 6, 5);
-            this.titleIcon.Name = "titleIcon";
-            this.titleIcon.Size = new System.Drawing.Size(60, 74);
-            this.titleIcon.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
-            this.titleIcon.TabIndex = 4;
-            this.titleIcon.TabStop = false;
-            // 
-            // SettingsForm
-            // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(15F, 37F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.BackColor = System.Drawing.Color.DeepSkyBlue;
-            this.ClientSize = new System.Drawing.Size(517, 582);
-            this.ControlBox = false;
-            this.Controls.Add(this.titleIcon);
-            this.Controls.Add(this.minimizePanelFrame);
-            this.Controls.Add(this.settingsPanel);
-            this.Controls.Add(this.lblSettingsTitle);
-            this.DoubleBuffered = true;
-            this.ForeColor = System.Drawing.Color.White;
-            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
-            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
-            this.Margin = new System.Windows.Forms.Padding(6, 5, 6, 5);
-            this.MaximizeBox = false;
-            this.MinimizeBox = false;
-            this.Name = "SettingsForm";
-            this.ShowInTaskbar = false;
-            this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Hide;
-            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
-            this.TopMost = true;
-            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.SettingsForm_FormClosing);
-            this.Load += new System.EventHandler(this.SettingsForm_Load);
-            this.settingsPanel.ResumeLayout(false);
-            this.settingsPanel.PerformLayout();
-            this.minimizePanelFrame.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.titleIcon)).EndInit();
-            this.ResumeLayout(false);
-
+            SuspendLayout();
+            Text = "Clock settings";
+            AutoScaleDimensions = new SizeF(96, 96);
+            AutoScaleMode = AutoScaleMode.Dpi;
+            Font = new Font("Segoe UI", 10);
+            ClientSize = new Size(760, 580);
+            FormBorderStyle = FormBorderStyle.FixedDialog;
+            MaximizeBox = false;
+            MinimizeBox = false;
+            ShowInTaskbar = false;
+            StartPosition = FormStartPosition.CenterParent;
+            BackColor = Color.FromArgb(245, 247, 250);
+            var options = new TableLayoutPanel { Dock = DockStyle.Left, Width = 430, Padding = new Padding(20), ColumnCount = 2, AutoScroll = true };
+            options.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 140));
+            options.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100));
+            Controls.Add(options);
+            void Full(Control control)
+            {
+                int row = options.RowCount++;
+                options.RowStyles.Add(new RowStyle(SizeType.AutoSize));
+                control.Margin = new Padding(0, 0, 0, 10);
+                options.Controls.Add(control, 0, row); options.SetColumnSpan(control, 2);
+            }
+            void Row(string title, Control control)
+            {
+                int row = options.RowCount++;
+                options.RowStyles.Add(new RowStyle(SizeType.AutoSize));
+                options.Controls.Add(new Label { Text = title, AutoSize = true, Margin = new Padding(0, 7, 8, 10) }, 0, row);
+                control.Anchor = AnchorStyles.Left | AnchorStyles.Right; control.Margin = new Padding(0, 0, 0, 10); options.Controls.Add(control, 1, row);
+            }
+            CheckBox Check(string title, bool value) => new CheckBox { Text = title, Checked = value, AutoSize = true };
+            startWithWindows = Check("Start with Windows", AppConfig.GetValue("autoStart", false));
+            startMinimized = Check("Start minimized in the taskbar", AppConfig.GetValue("startMinimized", false));
+            alwaysOnTop = Check("Keep the clock on top", AppConfig.GetValue("alwaysOnTop", false));
+            automaticUpdates = Check("Check for updates when the clock starts", AppConfig.GetValue("automaticUpdateCheck", false));
+            Full(startWithWindows); Full(startMinimized); Full(alwaysOnTop); Full(automaticUpdates);
+            var checkUpdates = new Button { AutoSizeMode = AutoSizeMode.GrowAndShrink, Text = "Check for updates now", AutoSize = true };
+            checkUpdates.Click += CheckForUpdates; Full(checkUpdates);
+            language = new ComboBox { DropDownStyle = ComboBoxStyle.DropDownList };
+            language.Items.AddRange(new object[] { "System", "Swedish", "English" });
+            language.SelectedItem = theme.Language.ToString();
+            language.SelectedIndexChanged += (_, _) => { theme.Language = Enum.Parse<TextClockTheme.LANGUAGE>((string)language.SelectedItem); RefreshPreview(); };
+            Row("Clock language", language);
+            activeFont = new Button { AutoSizeMode = AutoSizeMode.GrowAndShrink, AutoSize = true }; activeFont.Click += (_, _) => ChooseFont(true);
+            inactiveFont = new Button { AutoSizeMode = AutoSizeMode.GrowAndShrink, AutoSize = true }; inactiveFont.Click += (_, _) => ChooseFont(false);
+            Row("Active text font", activeFont); Row("Inactive text font", inactiveFont);
+            var colors = new FlowLayoutPanel { AutoSize = true, AutoSizeMode = AutoSizeMode.GrowAndShrink, WrapContents = false };
+            foreach (string kind in new[] { "Active", "Inactive", "Glow" })
+            {
+                var button = new Button { AutoSizeMode = AutoSizeMode.GrowAndShrink, Text = kind, AutoSize = true, MinimumSize = new Size(66, 28) };
+                button.Click += (_, _) => ChooseColor(kind); colors.Controls.Add(button);
+            }
+            Row("Text colors", colors);
+            var effects = new FlowLayoutPanel { AutoSize = true, AutoSizeMode = AutoSizeMode.GrowAndShrink };
+            glow = Check("Glow", theme.Glow); flicker = Check("Flicker", theme.Flicker);
+            glow.CheckedChanged += (_, _) => { theme.Glow = glow.Checked; RefreshPreview(); };
+            flicker.CheckedChanged += (_, _) => { theme.Flicker = flicker.Checked; RefreshPreview(); };
+            effects.Controls.Add(glow); effects.Controls.Add(flicker); Row("Active text effects", effects);
+            background = new ComboBox { DropDownStyle = ComboBoxStyle.DropDownList };
+            background.Items.AddRange(new object[] { "Original", "Brushed", "Rust", "None", "Custom" });
+            background.SelectedItem = theme.BackgroundTemplate;
+            background.SelectedIndexChanged += (_, _) => { theme.BackgroundTemplate = (string)background.SelectedItem; RefreshPreview(); };
+            Row("Background", background);
+            var browse = new Button { AutoSizeMode = AutoSizeMode.GrowAndShrink, Text = "Choose image…", AutoSize = true }; browse.Click += (_, _) => BrowseBackground();
+            Row("Custom image", browse);
+            backgroundPath = new Label { Text = PathName(theme.BackgroundImagePath), AutoSize = true, MaximumSize = new Size(380, 0) }; Full(backgroundPath);
+            var right = new Panel { Dock = DockStyle.Fill, Padding = new Padding(10, 25, 20, 20) };
+            Controls.Add(right); right.BringToFront();
+            var heading = new Label { Text = "Preview", Dock = DockStyle.Top, Height = 32 };
+            preview = new PictureBox { Location = new Point(10, 65), Size = new Size(280, 280), SizeMode = PictureBoxSizeMode.Zoom };
+            right.Controls.Add(heading); right.Controls.Add(preview);
+            var note = new Label { Text = "The system language uses Swedish for a Swedish Windows display language, and English otherwise.", Location = new Point(10, 360), Size = new Size(280, 75) };
+            right.Controls.Add(note);
+            var save = new Button { AutoSizeMode = AutoSizeMode.GrowAndShrink, Text = "Save", AutoSize = true, Location = new Point(10, 465) };
+            save.Click += (_, _) => SaveSettings(); right.Controls.Add(save); AcceptButton = save;
+            var cancel = new Button { AutoSizeMode = AutoSizeMode.GrowAndShrink, Text = "Cancel", AutoSize = true, Location = new Point(110, 465), DialogResult = DialogResult.Cancel };
+            right.Controls.Add(cancel); CancelButton = cancel;
+            FormClosed += (_, _) => preview.Image?.Dispose();
+            AutoScaleDimensions = new SizeF(96, 96);
+            ResumeLayout(false);
+            PerformLayout();
         }
-
-        #endregion
-        private CheckBox chkStartWithWindows;
-        private CheckBox chkStartMinimized;
-        private CheckBox chkAlwaysOnTop;
-        private Button btnSave;
-        private Label lblSettingsTitle;
-        private Panel settingsPanel;
-        private Panel minimizePanelFrame;
-        private Panel minimizePanel;
-        private PictureBox titleIcon;
+        private static string PathName(string path) => string.IsNullOrWhiteSpace(path) ? "No custom image selected" : System.IO.Path.GetFileName(path);
     }
 }

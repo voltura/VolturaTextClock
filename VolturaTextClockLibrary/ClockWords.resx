@@ -1,0 +1,48 @@
+<?xml version='1.0' encoding='utf-8'?>
+<root>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms</value>
+  </resheader>
+  <data xml:space="preserve" name="Rows">
+    <value>ITLISASTIME|ACQUARTERDC|TWENTYFIVEX|HALFBTENFTO|PASTERUNINE|ONESIXTHREE|FOURFIVETWO|EIGHTELEVEN|SEVENTWELVE|TENSEOCLOCK</value>
+  </data>
+  <data xml:space="preserve" name="Intro">
+    <value>IT|IS</value>
+  </data>
+  <data xml:space="preserve" name="Five">
+    <value>FIVE</value>
+  </data>
+  <data xml:space="preserve" name="Ten">
+    <value>TEN</value>
+  </data>
+  <data xml:space="preserve" name="Quarter">
+    <value>QUARTER</value>
+  </data>
+  <data xml:space="preserve" name="Twenty">
+    <value>TWENTY</value>
+  </data>
+  <data xml:space="preserve" name="Half">
+    <value>HALF</value>
+  </data>
+  <data xml:space="preserve" name="Past">
+    <value>PAST</value>
+  </data>
+  <data xml:space="preserve" name="To">
+    <value>TO</value>
+  </data>
+  <data xml:space="preserve" name="Hours">
+    <value>TWELVE|ONE|TWO|THREE|FOUR|FIVE|SIX|SEVEN|EIGHT|NINE|TEN|ELEVEN</value>
+  </data>
+  <data xml:space="preserve" name="OClock">
+    <value>OCLOCK</value>
+  </data>
+</root>

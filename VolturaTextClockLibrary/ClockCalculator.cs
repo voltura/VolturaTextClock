@@ -1,192 +1,71 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
+using System.Globalization;
+using System.Linq;
+using System.Resources;
 
 namespace VolturaTextClock.Library
 {
-    internal static class ClockCalculator
+    public sealed class ClockReading
     {
-        internal static List<string> GetTextTime(TextClockTheme.LANGUAGE language)
-        {
-            (int hour, int minute) = GetHourAndMinute();
-            return GetTextTime(language, hour, minute);
-        }
+        public string[] Rows { get; }
+        public bool[][] Active { get; }
+        public string Text { get; }
+        public ClockReading(string[] rows, bool[][] active, string text) { Rows = rows; Active = active; Text = text; }
+    }
 
-        private static (int, int) GetHourAndMinute()
-        {
-            DateTime exactTime = DateTime.Now;
-            int minute = 5 * (int)Math.Round(exactTime.Minute / 5.0);
-            return ((minute > 20) ? ((exactTime.Hour + 1 <= 24) ? exactTime.Hour + 1 : 1) : exactTime.Hour, minute);
-        }
+    public static class ClockCalculator
+    {
+        private static readonly ResourceManager Words = new ResourceManager("VolturaTextClock.Library.ClockWords", typeof(ClockCalculator).Assembly);
+        public static TextClockTheme.LANGUAGE ResolveLanguage(TextClockTheme.LANGUAGE language) => language == TextClockTheme.LANGUAGE.System
+            ? (CultureInfo.CurrentUICulture.TwoLetterISOLanguageName == "sv" ? TextClockTheme.LANGUAGE.Swedish : TextClockTheme.LANGUAGE.English) : language;
 
-        private static List<string> GetTextTime(TextClockTheme.LANGUAGE language, int hour, int minute)
+        public static ClockReading GetReading(DateTime time, TextClockTheme.LANGUAGE language)
         {
-            List<string> timeList = new List<string>();
-            if (language == TextClockTheme.LANGUAGE.Swedish)
+            bool swedish = ResolveLanguage(language) == TextClockTheme.LANGUAGE.Swedish;
+            var culture = CultureInfo.GetCultureInfo(swedish ? "sv" : "en");
+            string Get(string key) => Words.GetString(key, culture);
+            string[] rows = Get("Rows").Split('|');
+            bool[][] active = rows.Select(row => new bool[row.Length]).ToArray();
+            var tokens = new List<string>(Get("Intro").Split('|'));
+            int minute = (int)Math.Round(time.Minute / 5.0, MidpointRounding.AwayFromZero) * 5;
+            int hour = time.Hour;
+            if (minute == 60) { hour++; minute = 0; }
+            if (swedish)
             {
-                timeList.Add("KLOCKAN");
-                timeList.Add("ÄR");
-                if (minute == 0 || minute == 60) // no minutes
+                if (minute > 20) hour++;
+                if (minute == 25) tokens.AddRange(new[] { Get("Five"), Get("To"), Get("Half") });
+                else if (minute == 30) tokens.Add(Get("Half"));
+                else if (minute == 35) tokens.AddRange(new[] { Get("Five"), Get("Past"), Get("Half") });
+                else if (minute != 0) tokens.AddRange(new[] { Get(MinuteKey(minute > 30 ? 60 - minute : minute)), Get(minute > 30 ? "To" : "Past") });
+            }
+            else
+            {
+                if (minute > 30) hour++;
+                int amount = minute > 30 ? 60 - minute : minute;
+                if (amount == 25) tokens.AddRange(new[] { Get("Twenty"), Get("Five") });
+                else if (amount != 0) tokens.Add(Get(MinuteKey(amount)));
+                if (minute != 0) tokens.Add(Get(minute > 30 ? "To" : "Past"));
+            }
+            foreach (string token in tokens) Mark(token, 0, swedish ? 4 : 4, last: swedish);
+            string hourWord = Get("Hours").Split('|')[hour % 12];
+            Mark(hourWord, swedish ? 5 : 4, rows.Length - 1, last: false);
+            tokens.Add(hourWord);
+            if (!swedish && minute == 0) { string clock = Get("OClock"); Mark(clock, 9, 9, false); tokens.Add(clock); }
+            return new ClockReading(rows, active, string.Join(" ", tokens));
+
+            void Mark(string word, int firstRow, int lastRow, bool last)
+            {
+                for (int row = firstRow; row <= lastRow; row++)
                 {
-                    return timeList;
+                    int column = last ? rows[row].LastIndexOf(word, StringComparison.Ordinal) : rows[row].IndexOf(word, StringComparison.Ordinal);
+                    if (column < 0) continue;
+                    for (int i = 0; i < word.Length; i++) active[row][column + i] = true;
+                    return;
                 }
-                if (minute <= 20) // (min) över hour
-                {
-                    timeList.Add(GetMin(minute));
-                    timeList.Add("ÖVER");
-                }
-                else if (minute == 25) // fem i halv (hour + 1)
-                {
-                    timeList.Add(GetMin(5));
-                    timeList.Add("I");
-                    timeList.Add("HALV");
-                }
-                else if (minute == 30) // halv (hour + 1)
-                {
-                    timeList.Add("HALV");
-                }
-                else if (minute == 35) // fem över halv (hour + 1)
-                {
-                    timeList.Add(GetMin(5));
-                    timeList.Add("ÖVER");
-                    timeList.Add("HALV");
-                }
-                else if (minute > 35) // (min) i (hour + 1)
-                {
-                    timeList.Add(GetMin(minute));
-                    timeList.Add("I");
-                }
-                timeList.Add(GetHour(hour));
-            }
-            return timeList;
-        }
-
-        /// <summary>
-        /// Get current time in text excluding hour
-        /// </summary>
-        /// <returns></returns>
-        public static List<string> GetEvenFiveMinuteTimeNoHour()
-        {
-            int minute = 5 * (int)Math.Round(DateTime.Now.Minute / 5.0);
-            List<string> timeList = new List<string>
-            {
-                "KLOCKAN",
-                "ÄR"
-            };
-            if (minute == 0 || minute == 60) // no minutes
-            {
-                return timeList;
-            }
-            if (minute <= 20) // (min) över hour
-            {
-                timeList.Add(GetMin(minute));
-                timeList.Add("ÖVER");
-            }
-            else if (minute == 25) // fem i halv (hour + 1)
-            {
-                timeList.Add(GetMin(5));
-                timeList.Add("I");
-                timeList.Add("HALV");
-            }
-            else if (minute == 30) // halv (hour + 1)
-            {
-                timeList.Add("HALV");
-            }
-            else if (minute == 35) // fem över halv (hour + 1)
-            {
-                timeList.Add(GetMin(5));
-                timeList.Add("ÖVER");
-                timeList.Add("HALV");
-            }
-            else if (minute > 35) // (min) i (hour + 1)
-            {
-                timeList.Add(GetMin(minute));
-                timeList.Add("I");
-            }
-            return timeList;
-        }
-
-        /// <summary>
-        /// Get current time hour part
-        /// </summary>
-        /// <returns></returns>
-        public static string GetEvenFiveMinuteTimeHour()
-        {
-            DateTime exactTime = DateTime.Now;
-            int hour = exactTime.Hour;
-            int min = 5 * (int)Math.Round(exactTime.Minute / 5.0);
-
-            if (min <= 20)
-            {
-                return GetHour(hour);
-            }
-            if (min == 60) // hour increase
-            {
-                hour = (hour + 1 <= 24) ? hour + 1 : 1;
-                return GetHour(hour);
-            }
-            return GetHour(hour + 1);
-        }
-
-        private static string GetMin(int min)
-        {
-            switch (min)
-            {
-                case 10:
-                case 50:
-                    return "TIO";
-                case 15:
-                case 45:
-                    return "KVART";
-                case 20:
-                case 40:
-                    return "TJUGO";
-                case 30:
-                    return "HALV";
-                default:
-                    return "FEM";
+                throw new InvalidOperationException("Clock resource does not contain word: " + word);
             }
         }
-
-        private static string GetHour(int hour)
-        {
-            switch (hour)
-            {
-                case 1:
-                case 13:
-                    return "ETT";
-                case 2:
-                case 14:
-                    return "TVÅ";
-                case 3:
-                case 15:
-                    return "TRE";
-                case 4:
-                case 16:
-                    return "FYRA";
-                case 5:
-                case 17:
-                    return "FEM";
-                case 6:
-                case 18:
-                    return "SEX";
-                case 7:
-                case 19:
-                    return "SJU";
-                case 8:
-                case 20:
-                    return "ÅTTA";
-                case 9:
-                case 21:
-                    return "NIO";
-                case 10:
-                case 22:
-                    return "TIO";
-                case 11:
-                case 23:
-                    return "ELVA";
-                default:
-                    return "TOLV";
-            }
-        }
+        private static string MinuteKey(int minute) => minute switch { 5 => "Five", 10 => "Ten", 15 => "Quarter", 20 => "Twenty", 30 => "Half", _ => throw new ArgumentOutOfRangeException(nameof(minute)) };
     }
 }

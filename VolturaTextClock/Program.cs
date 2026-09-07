@@ -52,7 +52,7 @@ namespace VolturaTextClock
 
         private static void SetupAppConfig()
         {
-            string sourceAppConfigJsonFile = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), @"Properties\appsettings.json");
+            string sourceAppConfigJsonFile = Path.Combine(AppContext.BaseDirectory, @"Properties\appsettings.json");
             ConfigurationFile = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
                 "VolturaTextClockAppsettings.json");
             bool skipCheck = false;

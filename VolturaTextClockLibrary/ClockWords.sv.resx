@@ -1,0 +1,48 @@
+<?xml version='1.0' encoding='utf-8'?>
+<root>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms</value>
+  </resheader>
+  <data xml:space="preserve" name="Rows">
+    <value>KLOCKANTÄRK|FEMYISTIONI|KVARTQIENZO|TJUGOLIVIPM|ÖVERKAMHALV|ETTUSVLXTVÅ|TREMYKYFYRA|FEMSFLORSEX|SJUÅTTAINIO|TIOELVATOLV</value>
+  </data>
+  <data xml:space="preserve" name="Intro">
+    <value>KLOCKAN|ÄR</value>
+  </data>
+  <data xml:space="preserve" name="Five">
+    <value>FEM</value>
+  </data>
+  <data xml:space="preserve" name="Ten">
+    <value>TIO</value>
+  </data>
+  <data xml:space="preserve" name="Quarter">
+    <value>KVART</value>
+  </data>
+  <data xml:space="preserve" name="Twenty">
+    <value>TJUGO</value>
+  </data>
+  <data xml:space="preserve" name="Half">
+    <value>HALV</value>
+  </data>
+  <data xml:space="preserve" name="Past">
+    <value>ÖVER</value>
+  </data>
+  <data xml:space="preserve" name="To">
+    <value>I</value>
+  </data>
+  <data xml:space="preserve" name="Hours">
+    <value>TOLV|ETT|TVÅ|TRE|FYRA|FEM|SEX|SJU|ÅTTA|NIO|TIO|ELVA</value>
+  </data>
+  <data xml:space="preserve" name="OClock">
+    <value />
+  </data>
+</root>

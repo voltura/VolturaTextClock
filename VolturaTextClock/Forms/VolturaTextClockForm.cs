@@ -1,6 +1,6 @@
-﻿using System;
+using System;
+using System.Diagnostics;
 using System.Drawing;
-using System.IO;
 using System.Windows.Forms;
 using VolturaTextClock.Library;
 using static VolturaTextClock.Program;
@@ -9,231 +9,115 @@ namespace VolturaTextClock
 {
     public partial class VolturaTextClockForm : Form
     {
-        private SettingsForm m_SettingsForm;
-        private TextClockTheme m_Theme;
+        private TextClockTheme theme;
+        private Image clockBackground;
 
         public VolturaTextClockForm()
         {
-            DoubleBuffered = true;
-            ResizeRedraw = true;
             InitializeComponent();
-            SetTheme();
-            UpdateUI();
-         }
-
-        public SettingsForm ApplicationSettingsForm
-        {
-            get
-            {
-                if (m_SettingsForm == null)
-                {
-                    m_SettingsForm = new SettingsForm();
-                }
-                return m_SettingsForm;
-            }
-            set => m_SettingsForm = value;
-        }
-
-        private void SetTheme()
-        {
-            m_Theme = new TextClockTheme
-            {
-                BackgroundImagePath = SaveImageToDisk(),
-                Language = TextClockTheme.LANGUAGE.Swedish,
-                ClockImageFullPath = Path.Combine(Path.GetTempPath(), "clock.png")
-            };
-        }
-
-        private void SetFormLocationFromSettings()
-        {
-            string formLocation = AppConfig.GetValue("mainFormLocation", "40,40");
-            string[] formLeftAndTop = formLocation.Split(new char[] { ',' });
-            if (formLeftAndTop.Length == 2)
-            {
-                int tmpLeft = Convert.ToInt32(formLeftAndTop[0]);
-                int tmpTop = Convert.ToInt32(formLeftAndTop[1]);
-                if (tmpTop >= 0)
-                {
-                    Location = new Point(tmpLeft, tmpTop);
-                }
-            }
-        }
-
-        private void UpdateUI()
-        {
+            AutoSize = false;
+            ShowInTaskbar = true;
+            MinimizeBox = true;
+            clockPicBox.MinimumSize = Size.Empty;
+            clockPicBox.Dock = DockStyle.Fill;
             clockPicBox.MoveOtherWithMouse(this);
             clockPicBox.SendToBack();
-            pinPicBox.BackgroundImageLayout =
-            closePicBox.BackgroundImageLayout =
-            minimizePicBox.BackgroundImageLayout =
-            settingsPicBox.BackgroundImageLayout = 
-            optionsPicBox.BackgroundImageLayout = ImageLayout.Zoom;
-            ImageOverlay.InitializeImage(ref optionsPicBox);
-            ImageOverlay.InitializeImage(ref settingsPicBox);
-            ImageOverlay.InitializeImage(ref minimizePicBox);
-            ImageOverlay.InitializeImage(ref closePicBox);
+            foreach (var picture in new[] { optionsPicBox, settingsPicBox, minimizePicBox, closePicBox })
+            { picture.BackgroundImageLayout = ImageLayout.Zoom; var target = picture; ImageOverlay.InitializeImage(ref target); }
+            DpiChanged += (_, _) => { if (IsHandleCreated) BeginInvoke(new Action(() => RenderClock())); };
+            Resize += (_, _) => { if (theme != null) RenderClock(); };
+            VisibleChanged += (_, _) => { if (theme != null) RenderClock(); };
+            FormClosed += (_, _) => { clockTimer.Stop(); clockBackground?.Dispose(); clockPicBox.Image?.Dispose(); };
+            if (AppConfig.GetValue("startMinimized", false)) WindowState = FormWindowState.Minimized;
         }
 
-        private void ShowSettingsForm()
+        private void ApplySettings()
         {
-            Log.Info = "Displayed settings form";
-            if (ApplicationSettingsForm.Visible)
-            {
-                ApplicationSettingsForm.BringToFront();
-                ApplicationSettingsForm.Focus();
-            }
-            else
-            {
-                if (TopMost)
-                {
-                    TopMost = false;
-                }
-                ApplicationSettingsForm.ShowDialog(this);
-                TopMost = AppConfig.GetValue("alwaysOnTop", false);
-                pinPicBox.Image = TopMost ? Properties.Resources.unpin : Properties.Resources.pin;
-            }
+            theme = ClockAppearance.LoadTheme();
+            clockBackground?.Dispose();
+            clockBackground = ClockAppearance.LoadBackground(theme);
+            TopMost = AppConfig.GetValue("alwaysOnTop", false);
+            pinPicBox.Image = TopMost ? Properties.Resources.unpin : Properties.Resources.pin;
+            RenderClock();
         }
 
-        private void ToogleButtons()
+        private void RenderClock()
         {
-            settingsPicBox.Visible = pinPicBox.Visible = closePicBox.Visible = minimizePicBox.Visible = !minimizePicBox.Visible;
-            clockPicBox.SendToBack();
-        }
-
-        private static string SaveImageToDisk()
-        {
-            string path = Path.Combine(Path.GetTempPath(), "bg.png");
-
-            try
-            {
-                if (File.Exists(path))
-                {
-                    File.SetAttributes(path, FileAttributes.Normal);
-                    File.Delete(path);
-                }
-                Properties.Resources.background.Save(path, System.Drawing.Imaging.ImageFormat.Png);
-            }
-            catch (Exception ex)
-            {
-                Log.Error = ex;
-            }
-            return path.Replace('\\', '/');
-        }
-
-        private void UpdateClockText(bool force = false)
-        {
-            if (Visible && (m_SettingsForm == null || m_SettingsForm.Visible == false) && ((TextClock.GetImage(m_Theme) == true) || (force == true)))
-            {
-                clockPicBox?.Image?.Dispose();
-                clockPicBox.Image = LoadBitmapUnlocked(m_Theme.ClockImageFullPath);
-            }
-            StartClockTimer();
-        }
-
-        private static Bitmap LoadBitmapUnlocked(string fileName)
-        {
-            using Bitmap bm = new Bitmap(fileName);
-            return new Bitmap(bm);
-        }
-
-        private void StartClockTimer()
-        {
-            if (!clockTimer.Enabled)
-            {
-                clockTimer.Interval = 60000 - DateTime.Now.Millisecond;
-                clockTimer.Start();
-            }
-        }
-
-        private void SaveFormLocation()
-        {
-            if (Location.X >= 0)
-            {
-                AppConfig.AddOrUpdateAppSetting("mainFormLocation", $"{Location.X},{Location.Y}");
-            }
+            if (IsDisposed || theme == null || !Visible || WindowState == FormWindowState.Minimized || clockPicBox.Width <= 0 || clockPicBox.Height <= 0)
+            { clockTimer.Stop(); return; }
+            var now = DateTime.Now;
+            float brightness = theme.Flicker ? .88f + .12f * (float)Math.Sin(now.TimeOfDay.TotalSeconds * 4) : 1;
+            var image = TextClock.Render(theme, clockPicBox.ClientSize, now, clockBackground, brightness);
+            var previous = clockPicBox.Image;
+            clockPicBox.Image = image;
+            previous?.Dispose();
+            clockTimer.Interval = theme.Flicker ? 125 : 60000 - now.Second * 1000 - now.Millisecond;
+            clockTimer.Start();
         }
 
         private void VolturaTextClockForm_Load(object sender, EventArgs e)
         {
-            SetFormLocationFromSettings();
-            TopMost = AppConfig.GetValue("alwaysOnTop", false);
-            pinPicBox.Image = TopMost ? Properties.Resources.unpin : Properties.Resources.pin;
-            Visible = true;
-            BackgroundImage = Properties.Resources.background;
-            BackgroundImageLayout = ImageLayout.Zoom;
-            UpdateClockText(true);
-        }
-
-        private void OptionsPicBox_Click(object sender, EventArgs e)
-        {
-            ToogleButtons();
-        }
-
-        private void SettingsPicBox_Click(object sender, EventArgs e)
-        {
-            ShowSettingsForm();
-        }
-
-        private void PictureBox_MouseLeaveOrEnter(object sender, EventArgs e)
-        {
-            ImageOverlay.SwitchImage((PictureBox)sender);
-        }
-
-        /*private void CloseSettingsForm()
-        {
-            if (ApplicationSettingsForm.WindowState != FormWindowState.Normal ||
-                !ApplicationSettingsForm.Visible)
+            string[] coordinates = AppConfig.GetValue("mainFormLocation", "40,40").Split(',');
+            if (coordinates.Length == 2 && int.TryParse(coordinates[0], out int x) && int.TryParse(coordinates[1], out int y))
             {
-                return;
+                var proposed = new Rectangle(x, y, Width, Height);
+                if (Array.Exists(Screen.AllScreens, screen => screen.WorkingArea.IntersectsWith(proposed))) Location = proposed.Location;
             }
+            ApplySettings();
+        }
 
-            ApplicationSettingsForm.Visible = false;
-            ApplicationSettingsForm.Close();
-        }*/
+        protected override async void OnShown(EventArgs e)
+        {
+            base.OnShown(e);
+            if (!AppConfig.GetValue("automaticUpdateCheck", false)) return;
+            try
+            {
+                var version = await UpdateChecker.GetNewerVersionAsync(typeof(VolturaTextClockForm).Assembly.GetName().Version);
+                if (version != null && !IsDisposed && MessageBox.Show(this, $"VolturaTextClock {version} is available. Open the download page?", "Update available", MessageBoxButtons.YesNo, MessageBoxIcon.Information) == DialogResult.Yes)
+                    Process.Start(new ProcessStartInfo(UpdateChecker.ReleasesUrl) { UseShellExecute = true });
+            }
+            catch (Exception ex) { Log.Error = ex; }
+        }
 
-        private void ClockTimer_Tick(object sender, EventArgs e)
+        private void ShowSettingsForm()
         {
             clockTimer.Stop();
-            UpdateClockText();
+            using var settings = new SettingsForm();
+            bool pinned = TopMost;
+            TopMost = false;
+            settings.ShowDialog(this);
+            TopMost = pinned;
+            ApplySettings();
         }
 
-        private void ClosePicBox_Click(object sender, EventArgs e)
+        private void ToggleButtons() => settingsPicBox.Visible = pinPicBox.Visible = closePicBox.Visible = minimizePicBox.Visible = !minimizePicBox.Visible;
+        private void ClockTimer_Tick(object sender, EventArgs e)
         {
-            if (DialogResult.Yes == MessageBox.Show(this, "Do you want to close the application?",
-                "Close application", MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1))
-            {
-                Application.Exit();
-            }
+            RenderClock();
         }
-
-        private void VolturaTextClockForm_FormClosing(object sender, FormClosingEventArgs e)
-        {
-            SaveFormLocation();
-        }
-
+        private void OptionsPicBox_Click(object sender, EventArgs e) => ToggleButtons();
+        private void SettingsPicBox_Click(object sender, EventArgs e) => ShowSettingsForm();
+        private void PictureBox_MouseLeaveOrEnter(object sender, EventArgs e) => ImageOverlay.SwitchImage((PictureBox)sender);
         private void PinPicBox_Click(object sender, EventArgs e)
         {
             TopMost = !TopMost;
             pinPicBox.Image = TopMost ? Properties.Resources.unpin : Properties.Resources.pin;
             AppConfig.AddOrUpdateAppSetting("alwaysOnTop", TopMost);
-            ToogleButtons();
+            ToggleButtons();
         }
-
-        private void MinimizePicBox_Click(object sender, EventArgs e)
+        private void MinimizePicBox_Click(object sender, EventArgs e) { ToggleButtons(); WindowState = FormWindowState.Minimized; }
+        private void ClosePicBox_Click(object sender, EventArgs e)
         {
-            WindowState = FormWindowState.Minimized;
-            ToogleButtons();
+            if (MessageBox.Show(this, "Do you want to close the application?", "Close application", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes) Close();
         }
-
-        private const int CS_DROPSHADOW = 0x20000;
+        private void VolturaTextClockForm_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            var position = WindowState == FormWindowState.Normal ? Location : RestoreBounds.Location;
+            AppConfig.AddOrUpdateAppSetting("mainFormLocation", $"{position.X},{position.Y}");
+        }
         protected override CreateParams CreateParams
         {
-            get
-            {
-                CreateParams cp = base.CreateParams;
-                cp.ClassStyle |= CS_DROPSHADOW;
-                return cp;
-            }
+            get { var parameters = base.CreateParams; parameters.ClassStyle |= 0x20000; return parameters; }
         }
     }
 }

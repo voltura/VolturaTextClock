@@ -16,6 +16,10 @@ namespace VolturaTextClock
         public bool AutoStart { get; set; }
         [JsonProperty("startMinimized")]
         public bool StartMinimized { get; set; }
+        [JsonProperty("automaticUpdateCheck")]
+        public bool AutomaticUpdateCheck { get; set; }
+        [JsonProperty("clockTheme")]
+        public string ClockTheme { get; set; } = "{}";
         [JsonProperty("mainFormLocation")]
         public string MainFormLocation { get; set; }
         [JsonProperty("logFileSizeMB")]
