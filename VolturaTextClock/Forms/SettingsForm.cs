@@ -18,11 +18,15 @@ namespace VolturaTextClock
         private Label backgroundPath;
         private Button activeFont, inactiveFont;
         private bool initializing = true;
+        private readonly Timer previewTimer = new() { Interval = 125 };
+        private Image previewBackground;
 
         public SettingsForm()
         {
             theme = ClockAppearance.LoadTheme();
             InitializeComponent();
+            previewTimer.Tick += (_, _) => RenderPreview();
+            VisibleChanged += (_, _) => UpdatePreviewAnimation();
             initializing = false;
             RefreshPreview();
         }
@@ -30,13 +34,35 @@ namespace VolturaTextClock
         private void RefreshPreview()
         {
             if (initializing || preview.Width <= 0 || preview.Height <= 0) return;
-            using var backdrop = ClockAppearance.LoadBackground(theme);
-            var image = TextClock.Render(theme, preview.ClientSize, DateTime.Now, backdrop);
+            previewBackground?.Dispose();
+            previewBackground = ClockAppearance.LoadBackground(theme);
+            RenderPreview();
+            UpdatePreviewAnimation();
+            activeFont.Text = $"{theme.ActiveFont}, {theme.ActiveFontSize:0} px" + (theme.ActiveBold ? ", bold" : "") + (theme.ActiveItalic ? ", italic" : "");
+            inactiveFont.Text = $"{theme.InactiveFont}, {theme.InactiveFontSize:0} px" + (theme.InactiveBold ? ", bold" : "") + (theme.InactiveItalic ? ", italic" : "");
+        }
+
+        private void UpdatePreviewAnimation() => previewTimer.Enabled = !IsDisposed && Visible && theme.Flicker;
+
+        private void RenderPreview()
+        {
+            if (IsDisposed || preview.Width <= 0 || preview.Height <= 0) return;
+            var now = DateTime.Now;
+            var image = TextClock.Render(theme, preview.ClientSize, now, previewBackground, TextClock.GetIntensity(theme, now));
             var previous = preview.Image;
             preview.Image = image;
             previous?.Dispose();
-            activeFont.Text = $"{theme.ActiveFont}, {theme.ActiveFontSize:0} px" + (theme.ActiveBold ? ", bold" : "") + (theme.ActiveItalic ? ", italic" : "");
-            inactiveFont.Text = $"{theme.InactiveFont}, {theme.InactiveFontSize:0} px" + (theme.InactiveBold ? ", bold" : "") + (theme.InactiveItalic ? ", italic" : "");
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                previewTimer.Dispose();
+                previewBackground?.Dispose();
+                preview?.Image?.Dispose();
+            }
+            base.Dispose(disposing);
         }
 
         private void ChooseFont(bool active)

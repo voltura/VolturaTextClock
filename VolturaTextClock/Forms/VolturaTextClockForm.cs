@@ -11,6 +11,8 @@ namespace VolturaTextClock
     {
         private TextClockTheme theme;
         private Image clockBackground;
+        private readonly Forms.Controls.ClockButtonPanel buttonPanel = new();
+        private bool buttonsExpanded;
 
         public VolturaTextClockForm()
         {
@@ -22,9 +24,18 @@ namespace VolturaTextClock
             clockPicBox.Dock = DockStyle.Fill;
             clockPicBox.MoveOtherWithMouse(this);
             clockPicBox.SendToBack();
+            buttonPanel.Parent = clockPicBox;
+            foreach (var button in new[] { settingsPicBox, pinPicBox, minimizePicBox, closePicBox, optionsPicBox })
+            {
+                button.Parent = buttonPanel;
+                button.Anchor = AnchorStyles.Top | AnchorStyles.Left;
+                button.BackColor = Color.Black;
+            }
+            clockPicBox.SizeChanged += (_, _) => LayoutButtons();
+            LayoutButtons();
             foreach (var picture in new[] { optionsPicBox, settingsPicBox, minimizePicBox, closePicBox })
             { picture.BackgroundImageLayout = ImageLayout.Zoom; var target = picture; ImageOverlay.InitializeImage(ref target); }
-            DpiChanged += (_, _) => { if (IsHandleCreated) BeginInvoke(new Action(() => RenderClock())); };
+            DpiChanged += (_, _) => { if (IsHandleCreated) BeginInvoke(new Action(() => { LayoutButtons(); RenderClock(); })); };
             Resize += (_, _) => { if (theme != null) RenderClock(); };
             VisibleChanged += (_, _) => { if (theme != null) RenderClock(); };
             FormClosed += (_, _) => { clockTimer.Stop(); clockBackground?.Dispose(); clockPicBox.Image?.Dispose(); };
@@ -46,7 +57,7 @@ namespace VolturaTextClock
             if (IsDisposed || theme == null || !Visible || WindowState == FormWindowState.Minimized || clockPicBox.Width <= 0 || clockPicBox.Height <= 0)
             { clockTimer.Stop(); return; }
             var now = DateTime.Now;
-            float brightness = theme.Flicker ? .88f + .12f * (float)Math.Sin(now.TimeOfDay.TotalSeconds * 4) : 1;
+            float brightness = TextClock.GetIntensity(theme, now);
             var image = TextClock.Render(theme, clockPicBox.ClientSize, now, clockBackground, brightness);
             var previous = clockPicBox.Image;
             clockPicBox.Image = image;
@@ -90,7 +101,33 @@ namespace VolturaTextClock
             ApplySettings();
         }
 
-        private void ToggleButtons() => settingsPicBox.Visible = pinPicBox.Visible = closePicBox.Visible = minimizePicBox.Visible = !minimizePicBox.Visible;
+        private void ToggleButtons()
+        {
+            buttonsExpanded = !buttonsExpanded;
+            LayoutButtons();
+        }
+
+        private void LayoutButtons()
+        {
+            int padding = Math.Max(3, (int)Math.Round(5 * DeviceDpi / 96f));
+            int gap = Math.Max(2, (int)Math.Round(4 * DeviceDpi / 96f));
+            int size = Math.Max(16, (int)Math.Round(36 * DeviceDpi / 96f));
+            var buttons = new[] { settingsPicBox, pinPicBox, minimizePicBox, closePicBox, optionsPicBox };
+            int count = buttonsExpanded ? buttons.Length : 1;
+            size = Math.Min(size, Math.Max(1, (clockPicBox.Width - 2 * padding - (count - 1) * gap) / count));
+            buttonPanel.Size = new Size(2 * padding + count * size + (count - 1) * gap, size + 2 * padding);
+            buttonPanel.Location = new Point(clockPicBox.Width - buttonPanel.Width, clockPicBox.Height - buttonPanel.Height);
+            int left = padding;
+            foreach (var button in buttons)
+            {
+                button.Visible = buttonsExpanded || button == optionsPicBox;
+                if (!buttonsExpanded && button != optionsPicBox) continue;
+                button.SetBounds(left, padding, size, size);
+                left += size + gap;
+            }
+            buttonPanel.BringToFront();
+            buttonPanel.Invalidate();
+        }
         private void ClockTimer_Tick(object sender, EventArgs e)
         {
             RenderClock();

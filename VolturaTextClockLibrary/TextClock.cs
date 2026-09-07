@@ -7,6 +7,9 @@ namespace VolturaTextClock.Library
 {
     public static class TextClock
     {
+        public static float GetIntensity(TextClockTheme theme, DateTime time) =>
+            theme.Flicker ? .88f + .12f * (float)Math.Sin(time.TimeOfDay.TotalSeconds * 4) : 1;
+
         public static Bitmap Render(TextClockTheme theme, Size size, DateTime time, Image background = null, float intensity = 1)
         {
             if (size.Width <= 0 || size.Height <= 0) throw new ArgumentOutOfRangeException(nameof(size));

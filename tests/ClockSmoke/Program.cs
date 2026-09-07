@@ -83,6 +83,14 @@ internal static class Smoke
             form.WindowState = FormWindowState.Minimized; Application.DoEvents();
             form.WindowState = FormWindowState.Normal; Application.DoEvents();
             Check(picture.Image != null, "restored clock has an image");
+            foreach (string state in new[] { "collapsed", "expanded" })
+            {
+                if (state == "expanded") typeof(VolturaTextClockForm).GetMethod("ToggleButtons", Hidden)!.Invoke(form, null);
+                Application.DoEvents();
+                using var snapshot = new Bitmap(form.Width, form.Height);
+                form.DrawToBitmap(snapshot, new Rectangle(Point.Empty, snapshot.Size));
+                snapshot.Save(Path.Combine(Output, $"buttons-{state}.png"));
+            }
             form.Close();
         }
         Configure(true);
@@ -115,6 +123,33 @@ internal static class Smoke
             using (var unlocked = File.Open(appearance.BackgroundImagePath, FileMode.Open, FileAccess.ReadWrite, FileShare.None))
                 Check(unlocked.Length > 0, "custom background is not left locked");
             backgrounds.SelectedItem = "Original";
+            var flickerOption = (CheckBox)typeof(SettingsForm).GetField("flicker", Hidden)!.GetValue(settings)!;
+            var animation = (System.Windows.Forms.Timer)typeof(SettingsForm).GetField("previewTimer", Hidden)!.GetValue(settings)!;
+            var animatedPreview = (PictureBox)typeof(SettingsForm).GetField("preview", Hidden)!.GetValue(settings)!;
+            flickerOption.Checked = true;
+            Check(animation.Enabled, "flicker checkbox starts preview animation");
+            using (var firstFrame = new Bitmap(animatedPreview.Image!))
+            {
+                var elapsed = System.Diagnostics.Stopwatch.StartNew();
+                bool changed = false;
+                while (!changed && elapsed.ElapsedMilliseconds < 2000)
+                {
+                    Application.DoEvents();
+                    var frame = (Bitmap)animatedPreview.Image!;
+                    for (int y = 0; y < frame.Height && !changed; y += 3)
+                        for (int x = 0; x < frame.Width && !changed; x += 3)
+                            changed = frame.GetPixel(x, y) != firstFrame.GetPixel(x, y);
+                    System.Threading.Thread.Sleep(20);
+                }
+                Check(changed, "enabled flicker visibly changes preview pixels over time");
+            }
+            flickerOption.Checked = false;
+            Check(!animation.Enabled, "unchecking flicker stops preview animation");
+            flickerOption.Checked = true;
+            settings.Hide();
+            Check(!animation.Enabled, "hidden settings stop preview animation");
+            settings.Show();
+            Check(animation.Enabled, "visible settings resume selected animation");
             using var screenshot = new Bitmap(settings.Width, settings.Height);
             settings.DrawToBitmap(screenshot, new Rectangle(Point.Empty, screenshot.Size));
             screenshot.Save(Path.Combine(Output, "settings.png"));
