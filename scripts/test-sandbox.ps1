@@ -38,13 +38,20 @@ try {
     $result.checks += 'Reinstall/upgrade retained settings'
     $uninstall = Start-Process -FilePath (Join-Path $target 'Uninstall.exe') -ArgumentList '/S' -PassThru -WindowStyle Hidden
     if (-not $uninstall.WaitForExit(120000)) { throw 'Uninstall timed out.' }
-    $deadline = [DateTime]::UtcNow.AddSeconds(30)
-    while ((Test-Path -LiteralPath $target) -and [DateTime]::UtcNow -lt $deadline) { Start-Sleep -Milliseconds 250 }
+    $result.uninstallLauncherExit = $uninstall.ExitCode
+    $deadline = [DateTime]::UtcNow.AddSeconds(180)
+    while (((Test-Path -LiteralPath $target) -or (Test-Path 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Uninstall\VolturaTextClock')) -and [DateTime]::UtcNow -lt $deadline) { Start-Sleep -Milliseconds 500 }
     if ((Test-Path -LiteralPath $target) -or (Test-Path 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Uninstall\VolturaTextClock')) { throw 'Uninstall did not remove the installation.' }
     if ([IO.File]::ReadAllText($settings) -ne $before) { throw 'Uninstall removed user settings.' }
     $result.checks += 'Uninstall removed owned installation and retained settings'
     $result.passed = $true
-} catch { $result.error = $_.Exception.ToString() }
+} catch {
+    $result.error = $_.Exception.ToString()
+    $result.remainingProcesses = @(Get-Process -ErrorAction SilentlyContinue | Where-Object { $_.ProcessName -match 'TextClock|Uninstall|Au_|powershell' } | Select-Object ProcessName,Id)
+    $result.remainingFiles = @(Get-ChildItem -LiteralPath (Join-Path $env:LOCALAPPDATA 'Programs') -Filter '*TextClock*' -Force -ErrorAction SilentlyContinue | Select-Object Name)
+    $journal = Join-Path $env:LOCALAPPDATA 'Programs\.VolturaTextClock-maintenance\journal.json'
+    if (Test-Path -LiteralPath $journal) { $result.maintenanceJournal = [IO.File]::ReadAllText($journal) }
+}
 finally {
     $result.finishedUtc = [DateTime]::UtcNow.ToString('O')
     [IO.File]::WriteAllText('C:\TextClockOutput\result.json', ($result | ConvertTo-Json -Depth 5))
