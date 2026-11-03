@@ -23,7 +23,7 @@ jobs:
       - uses: actions/checkout@v6
       - run: ./scripts/build-site.ps1
         shell: pwsh
-      - uses: actions/configure-pages@v5
+      - uses: actions/configure-pages@v6
       - uses: actions/upload-pages-artifact@v4
         with:
           path: artifacts/site
