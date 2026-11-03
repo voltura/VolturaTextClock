@@ -1,4 +1,6 @@
 using Newtonsoft.Json;
+using VolturaTextClock.Updates;
+using System.Collections.Generic;
 using System;
 using System.Diagnostics;
 using System.Drawing;
@@ -11,6 +13,9 @@ namespace VolturaTextClock
 {
     public partial class SettingsForm : Form
     {
+        private readonly UpdateService updater = new(System.Reflection.Assembly.GetEntryAssembly() == typeof(SettingsForm).Assembly
+            ? Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "Voltura", "TextClock")
+            : Path.Combine(Path.GetDirectoryName(ConfigurationFile), "update-test-cache"));
         private TextClockTheme theme;
         private PictureBox preview;
         private CheckBox startWithWindows, startMinimized, alwaysOnTop, automaticUpdates, glow, flicker;
@@ -18,7 +23,7 @@ namespace VolturaTextClock
         private Label backgroundPath;
         private Button activeFont, inactiveFont;
         private bool initializing = true;
-        private readonly Timer previewTimer = new() { Interval = 125 };
+        private readonly System.Windows.Forms.Timer previewTimer = new() { Interval = 125 };
         private Image previewBackground;
 
         public SettingsForm()
@@ -27,7 +32,11 @@ namespace VolturaTextClock
             InitializeComponent();
             previewTimer.Tick += (_, _) => RenderPreview();
             VisibleChanged += (_, _) => UpdatePreviewAnimation();
+            updater.Changed += UpdateUi;
+            Shown += async (_, _) => { try { await updater.RestorePendingAsync(); } catch (OperationCanceledException) { } };
+            FormClosed += async (_, _) => { updater.Changed -= UpdateUi; await updater.DisposeAsync(); };
             initializing = false;
+            UpdateUi();
             RefreshPreview();
         }
 
@@ -38,8 +47,8 @@ namespace VolturaTextClock
             previewBackground = ClockAppearance.LoadBackground(theme);
             RenderPreview();
             UpdatePreviewAnimation();
-            activeFont.Text = $"{theme.ActiveFont}, {theme.ActiveFontSize:0} px" + (theme.ActiveBold ? ", bold" : "") + (theme.ActiveItalic ? ", italic" : "");
-            inactiveFont.Text = $"{theme.InactiveFont}, {theme.InactiveFontSize:0} px" + (theme.InactiveBold ? ", bold" : "") + (theme.InactiveItalic ? ", italic" : "");
+            activeFont.Text = $"{theme.ActiveFont}, {theme.ActiveFontSize:0} px" + (theme.ActiveBold ? ", " + UiText.Get("Bold") : "") + (theme.ActiveItalic ? ", " + UiText.Get("Italic") : "");
+            inactiveFont.Text = $"{theme.InactiveFont}, {theme.InactiveFontSize:0} px" + (theme.InactiveBold ? ", " + UiText.Get("Bold") : "") + (theme.InactiveItalic ? ", " + UiText.Get("Italic") : "");
         }
 
         private void UpdatePreviewAnimation() => previewTimer.Enabled = !IsDisposed && Visible && theme.Flicker;
@@ -48,7 +57,8 @@ namespace VolturaTextClock
         {
             if (IsDisposed || preview.Width <= 0 || preview.Height <= 0) return;
             var now = DateTime.Now;
-            var image = TextClock.Render(theme, preview.ClientSize, now, previewBackground, TextClock.GetIntensity(theme, now));
+            int side = Math.Max(1, Math.Min(preview.ClientSize.Width, preview.ClientSize.Height));
+            var image = TextClock.Render(theme, new Size(side, side), now, previewBackground, TextClock.GetIntensity(theme, now));
             var previous = preview.Image;
             preview.Image = image;
             previous?.Dispose();
@@ -95,7 +105,7 @@ namespace VolturaTextClock
 
         private void BrowseBackground()
         {
-            using var dialog = new OpenFileDialog { Title = "Choose clock background", Filter = "Images|*.png;*.jpg;*.jpeg;*.bmp", CheckFileExists = true };
+            using var dialog = new OpenFileDialog { Title = UiText.Get("ChooseImage"), Filter = "Images|*.png;*.jpg;*.jpeg;*.bmp", CheckFileExists = true };
             if (dialog.ShowDialog(this) != DialogResult.OK) return;
             try
             {
@@ -107,36 +117,48 @@ namespace VolturaTextClock
                 RefreshPreview();
             }
             catch (Exception ex) when (ex is ArgumentException || ex is IOException || ex is OutOfMemoryException || ex is UnauthorizedAccessException)
-            { MessageBox.Show(this, "This image could not be opened. Choose a PNG, JPEG or bitmap image.", "Background image", MessageBoxButtons.OK, MessageBoxIcon.Warning); }
+            { MessageBox.Show(this, UiText.Get("BadImage"), UiText.Get("Background"), MessageBoxButtons.OK, MessageBoxIcon.Warning); }
         }
 
         private void SaveSettings()
         {
-            AppConfig.AddOrUpdateAppSetting("autoStart", startWithWindows.Checked);
-            StartWithWindows.Active = startWithWindows.Checked;
-            AppConfig.AddOrUpdateAppSetting("startMinimized", startMinimized.Checked);
-            AppConfig.AddOrUpdateAppSetting("alwaysOnTop", alwaysOnTop.Checked);
-            AppConfig.AddOrUpdateAppSetting("automaticUpdateCheck", automaticUpdates.Checked);
-            AppConfig.AddOrUpdateAppSetting("clockTheme", JsonConvert.SerializeObject(theme));
-            DialogResult = DialogResult.OK;
-            Close();
+            try
+            {
+                StartWithWindows.Active = startWithWindows.Checked;
+                SettingsStore.Save(ConfigurationFile, new Dictionary<string, object>
+                {
+                    ["autoStart"] = startWithWindows.Checked, ["startMinimized"] = startMinimized.Checked,
+                    ["alwaysOnTop"] = alwaysOnTop.Checked, ["automaticUpdateCheck"] = automaticUpdates.Checked,
+                    ["interfaceLanguage"] = (string)interfaceLanguage.SelectedItem,
+                    ["clockTheme"] = JsonConvert.SerializeObject(theme)
+                });
+                UiText.Language = (string)interfaceLanguage.SelectedItem;
+                DialogResult = DialogResult.OK;
+                Close();
+            }
+            catch (Exception error) when (error is IOException or UnauthorizedAccessException or System.Security.SecurityException)
+            {
+                Log.Error = error;
+                MessageBox.Show(this, UiText.Get("SaveFailed"), UiText.Get("Settings"), MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
         }
 
         private async void CheckForUpdates(object sender, EventArgs e)
         {
-            var button = (Button)sender;
-            button.Enabled = false;
-            try
-            {
-                var version = await UpdateChecker.GetNewerVersionAsync(typeof(SettingsForm).Assembly.GetName().Version);
-                if (IsDisposed) return;
-                if (version == null) MessageBox.Show(this, "You have the latest release.", "Check for updates");
-                else if (MessageBox.Show(this, $"Version {version} is available. Open the download page?", "Update available", MessageBoxButtons.YesNo) == DialogResult.Yes)
-                    Process.Start(new ProcessStartInfo(UpdateChecker.ReleasesUrl) { UseShellExecute = true });
-            }
-            catch (Exception)
-            { if (!IsDisposed) MessageBox.Show(this, "Updates could not be checked. Please try again later.", "Check for updates"); }
-            finally { if (!IsDisposed) button.Enabled = true; }
+            if (!updater.Eligible) { AppLinks.Open(UpdateChecker.ReleasesUrl); return; }
+            await updater.CheckAsync();
+        }
+
+        private void UpdateUi()
+        {
+            if (IsDisposed || Disposing) return;
+            if (InvokeRequired) { if (IsHandleCreated) BeginInvoke(new Action(UpdateUi)); return; }
+            var state = updater.State;
+            updateStatus.Text = UiText.Get(state.Status.ToString());
+            checkUpdate.Enabled = !state.Busy;
+            downloadUpdate.Visible = state.Status == UpdateStatus.Available;
+            installUpdate.Visible = state.Ready;
+            cancelUpdate.Visible = state.Busy && state.Status != UpdateStatus.Installing;
         }
     }
 }

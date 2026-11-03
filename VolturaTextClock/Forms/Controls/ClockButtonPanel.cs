@@ -24,7 +24,8 @@ namespace VolturaTextClock.Forms.Controls
             outline.AddLine(Width - .5f, Height - .5f, .5f, Height - .5f);
             outline.CloseFigure();
             e.Graphics.SmoothingMode = SmoothingMode.AntiAlias;
-            e.Graphics.FillPath(Brushes.Black, outline);
+            using var fill = new SolidBrush(Color.FromArgb(23, 28, 35));
+            e.Graphics.FillPath(fill, outline);
             using var border = new Pen(Color.FromArgb(85, 85, 85));
             e.Graphics.DrawPath(border, outline);
         }

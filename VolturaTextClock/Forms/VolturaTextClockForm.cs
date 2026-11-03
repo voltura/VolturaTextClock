@@ -13,10 +13,14 @@ namespace VolturaTextClock
         private Image clockBackground;
         private readonly Forms.Controls.ClockButtonPanel buttonPanel = new();
         private bool buttonsExpanded;
+        private Forms.Controls.ClockActionButton[] actionButtons;
+        private readonly ToolTip actionHints = new();
 
         public VolturaTextClockForm()
         {
             InitializeComponent();
+            Text = "Voltura TextClock";
+            Icon = Icon.ExtractAssociatedIcon(Application.ExecutablePath);
             AutoSize = false;
             ShowInTaskbar = true;
             MinimizeBox = true;
@@ -27,18 +31,22 @@ namespace VolturaTextClock
             buttonPanel.Parent = clockPicBox;
             foreach (var button in new[] { settingsPicBox, pinPicBox, minimizePicBox, closePicBox, optionsPicBox })
             {
-                button.Parent = buttonPanel;
-                button.Anchor = AnchorStyles.Top | AnchorStyles.Left;
-                button.BackColor = Color.Black;
+                button.Visible = false;
             }
+            actionButtons = new[] { "Settings", "Pin", "Minimize", "Close", "Options" }
+                .Select(key => new Forms.Controls.ClockActionButton(key)).ToArray();
+            foreach (var button in actionButtons) { buttonPanel.Controls.Add(button); actionHints.SetToolTip(button, button.AccessibleName); }
+            actionButtons[0].Click += SettingsPicBox_Click;
+            actionButtons[1].Click += PinPicBox_Click;
+            actionButtons[2].Click += MinimizePicBox_Click;
+            actionButtons[3].Click += ClosePicBox_Click;
+            actionButtons[4].Click += OptionsPicBox_Click;
             clockPicBox.SizeChanged += (_, _) => LayoutButtons();
             LayoutButtons();
-            foreach (var picture in new[] { optionsPicBox, settingsPicBox, minimizePicBox, closePicBox })
-            { picture.BackgroundImageLayout = ImageLayout.Zoom; var target = picture; ImageOverlay.InitializeImage(ref target); }
             DpiChanged += (_, _) => { if (IsHandleCreated) BeginInvoke(new Action(() => { LayoutButtons(); RenderClock(); })); };
             Resize += (_, _) => { if (theme != null) RenderClock(); };
             VisibleChanged += (_, _) => { if (theme != null) RenderClock(); };
-            FormClosed += (_, _) => { clockTimer.Stop(); clockBackground?.Dispose(); clockPicBox.Image?.Dispose(); };
+            FormClosed += (_, _) => { clockTimer.Stop(); clockBackground?.Dispose(); clockPicBox.Image?.Dispose(); actionHints.Dispose(); };
             if (AppConfig.GetValue("startMinimized", false)) WindowState = FormWindowState.Minimized;
         }
 
@@ -48,6 +56,11 @@ namespace VolturaTextClock
             clockBackground?.Dispose();
             clockBackground = ClockAppearance.LoadBackground(theme);
             TopMost = AppConfig.GetValue("alwaysOnTop", false);
+            for (int index = 0; index < actionButtons.Length; index++)
+            {
+                actionButtons[index].AccessibleName = UiText.Get(new[] { "Settings", "Pin", "Minimize", "Close", "Options" }[index]);
+                actionHints.SetToolTip(actionButtons[index], actionButtons[index].AccessibleName);
+            }
             pinPicBox.Image = TopMost ? Properties.Resources.unpin : Properties.Resources.pin;
             RenderClock();
         }
@@ -84,8 +97,8 @@ namespace VolturaTextClock
             try
             {
                 var version = await UpdateChecker.GetNewerVersionAsync(typeof(VolturaTextClockForm).Assembly.GetName().Version);
-                if (version != null && !IsDisposed && MessageBox.Show(this, $"VolturaTextClock {version} is available. Open the download page?", "Update available", MessageBoxButtons.YesNo, MessageBoxIcon.Information) == DialogResult.Yes)
-                    Process.Start(new ProcessStartInfo(UpdateChecker.ReleasesUrl) { UseShellExecute = true });
+                if (version != null && !IsDisposed && MessageBox.Show(this, UiText.Get("UpdatePrompt"), "Voltura TextClock", MessageBoxButtons.YesNo, MessageBoxIcon.Information) == DialogResult.Yes)
+                    ShowSettingsForm();
             }
             catch (Exception ex) { Log.Error = ex; }
         }
@@ -112,7 +125,8 @@ namespace VolturaTextClock
             int padding = Math.Max(3, (int)Math.Round(5 * DeviceDpi / 96f));
             int gap = Math.Max(2, (int)Math.Round(4 * DeviceDpi / 96f));
             int size = Math.Max(16, (int)Math.Round(36 * DeviceDpi / 96f));
-            var buttons = new[] { settingsPicBox, pinPicBox, minimizePicBox, closePicBox, optionsPicBox };
+            var buttons = actionButtons;
+            if (buttons == null) return;
             int count = buttonsExpanded ? buttons.Length : 1;
             size = Math.Min(size, Math.Max(1, (clockPicBox.Width - 2 * padding - (count - 1) * gap) / count));
             buttonPanel.Size = new Size(2 * padding + count * size + (count - 1) * gap, size + 2 * padding);
@@ -120,8 +134,8 @@ namespace VolturaTextClock
             int left = padding;
             foreach (var button in buttons)
             {
-                button.Visible = buttonsExpanded || button == optionsPicBox;
-                if (!buttonsExpanded && button != optionsPicBox) continue;
+                button.Visible = buttonsExpanded || button == actionButtons[4];
+                if (!buttonsExpanded && button != actionButtons[4]) continue;
                 button.SetBounds(left, padding, size, size);
                 left += size + gap;
             }
@@ -145,7 +159,7 @@ namespace VolturaTextClock
         private void MinimizePicBox_Click(object sender, EventArgs e) { ToggleButtons(); WindowState = FormWindowState.Minimized; }
         private void ClosePicBox_Click(object sender, EventArgs e)
         {
-            if (MessageBox.Show(this, "Do you want to close the application?", "Close application", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes) Close();
+            if (MessageBox.Show(this, UiText.Get("CloseQuestion"), UiText.Get("Close"), MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes) Close();
         }
         private void VolturaTextClockForm_FormClosing(object sender, FormClosingEventArgs e)
         {

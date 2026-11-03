@@ -1,0 +1,28 @@
+name: CodeQL
+on:
+  push:
+    branches: [master]
+  pull_request:
+  schedule:
+    - cron: '17 6 * * 1'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  analyze:
+    runs-on: windows-2025
+    permissions:
+      contents: read
+      security-events: write
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-dotnet@v5
+        with:
+          global-json-file: global.json
+      - uses: github/codeql-action/init@v4
+        with:
+          languages: csharp
+          build-mode: manual
+          queries: security-extended
+      - run: dotnet build VolturaTextClock.sln -c Release --no-incremental
+      - uses: github/codeql-action/analyze@v4

@@ -7,10 +7,6 @@ namespace VolturaTextClock.Forms.Controls
     /// </summary>
     public class TransparentPanel : Panel
     {
-        public TransparentPanel()
-        {
-        }
-
         protected override CreateParams CreateParams
         {
             get

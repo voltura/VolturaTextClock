@@ -12,8 +12,31 @@ namespace VolturaTextClock
     {
         internal static TextClockTheme LoadTheme()
         {
-            try { return JsonConvert.DeserializeObject<TextClockTheme>(AppConfig.GetValue("clockTheme", "{}")) ?? new TextClockTheme(); }
+            try
+            {
+                var theme = JsonConvert.DeserializeObject<TextClockTheme>(AppConfig.GetValue("clockTheme", "{}")) ?? new TextClockTheme();
+                var defaults = new TextClockTheme();
+                if (!Enum.IsDefined(theme.Language)) theme.Language = TextClockTheme.LANGUAGE.System;
+                if (!float.IsFinite(theme.ActiveFontSize)) theme.ActiveFontSize = defaults.ActiveFontSize;
+                if (!float.IsFinite(theme.InactiveFontSize)) theme.InactiveFontSize = defaults.InactiveFontSize;
+                theme.ActiveFontSize = Math.Clamp(theme.ActiveFontSize, 8, 36);
+                theme.InactiveFontSize = Math.Clamp(theme.InactiveFontSize, 8, 36);
+                theme.ActiveFont ??= defaults.ActiveFont;
+                theme.InactiveFont ??= defaults.InactiveFont;
+                theme.ActiveColor = ValidColor(theme.ActiveColor, defaults.ActiveColor);
+                theme.InactiveColor = ValidColor(theme.InactiveColor, defaults.InactiveColor);
+                theme.GlowColor = ValidColor(theme.GlowColor, defaults.GlowColor);
+                if (theme.BackgroundTemplate is not ("Original" or "Brushed" or "Rust" or "None" or "Custom")) theme.BackgroundTemplate = "Original";
+                return theme;
+            }
             catch (JsonException ex) { Log.Error = ex; return new TextClockTheme(); }
+        }
+
+        private static string ValidColor(string color, string fallback)
+        {
+            if (string.IsNullOrWhiteSpace(color)) return fallback;
+            try { return ColorTranslator.FromHtml(color).IsEmpty ? fallback : color; }
+            catch (ArgumentException) { return fallback; }
         }
 
         internal static Image LoadBackground(TextClockTheme theme)

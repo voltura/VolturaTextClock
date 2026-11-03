@@ -1,34 +1,25 @@
-﻿using Microsoft.Win32;
+using Microsoft.Win32;
+using System;
 using System.Windows.Forms;
 
-namespace VolturaTextClock
+namespace VolturaTextClock;
+
+public static class StartWithWindows
 {
-    public static class StartWithWindows
+    private const string RunKey = @"Software\Microsoft\Windows\CurrentVersion\Run";
+    private const string ValueName = "VolturaTextClock";
+    internal static bool Active
     {
-        #region Internal static property that updates registry for application to start when Windows start
-
-        internal static bool Active
+        get => Registry.GetValue(@"HKEY_CURRENT_USER\" + RunKey, ValueName, null) != null;
+        set
         {
-            get => Registry.GetValue("HKEY_CURRENT_USER\\Software\\Microsoft\\Windows\\CurrentVersion\\Run\\", Application.ProductName, null) != null;
-            set
-            {
-                using RegistryKey registryKey = Registry.CurrentUser;
-                using RegistryKey regRun = registryKey?.OpenSubKey("Software\\Microsoft\\Windows\\CurrentVersion\\Run\\", true);
-                if (value)
-                {
-                    regRun?.SetValue(Application.ProductName, Application.ExecutablePath);
-                }
-                else
-                {
-                    if (regRun?.GetValue(Application.ProductName) != null)
-                    {
-                        regRun?.DeleteValue(Application.ProductName);
-                    }
-                }
-                registryKey?.Flush();
-            }
+            if (System.Reflection.Assembly.GetEntryAssembly() != typeof(StartWithWindows).Assembly) return;
+            using var key = Registry.CurrentUser.CreateSubKey(RunKey);
+            if (value) key.SetValue(ValueName, "\"" + Application.ExecutablePath + "\"");
+            else key.DeleteValue(ValueName, false);
+            var legacy = key.GetValue("Voltura TextClock") as string;
+            if (legacy?.Contains("VolturaTextClock.exe", StringComparison.OrdinalIgnoreCase) == true)
+                key.DeleteValue("Voltura TextClock", false);
         }
-
-        #endregion Internal static property that updates registry for application to start when Windows start
     }
 }

@@ -1,0 +1,31 @@
+name: Publish product site
+on:
+  push:
+    branches: [master]
+    paths: ['site/**', 'Directory.Build.props', 'scripts/build-site.ps1', '.github/workflows/pages.yml']
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: pages
+  cancel-in-progress: false
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v6
+      - run: ./scripts/build-site.ps1
+        shell: pwsh
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v4
+        with:
+          path: artifacts/site
+      - uses: actions/deploy-pages@v4
+        id: deployment

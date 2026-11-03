@@ -1,0 +1,15 @@
+<Project>
+  <PropertyGroup>
+    <Version>1.1.0</Version>
+    <AssemblyVersion>$(Version).0</AssemblyVersion>
+    <FileVersion>$(Version).0</FileVersion>
+    <Authors>Joakim Skoglund</Authors>
+    <Company>Voltura AB</Company>
+    <Product>Voltura TextClock</Product>
+    <Copyright>Copyright Â© 2020â€“2026 Voltura AB</Copyright>
+    <RepositoryUrl>https://github.com/voltura/VolturaTextClock</RepositoryUrl>
+    <PackageLicenseExpression>GPL-3.0-only</PackageLicenseExpression>
+    <Deterministic>true</Deterministic>
+    <NeutralLanguage>en</NeutralLanguage>
+  </PropertyGroup>
+</Project>

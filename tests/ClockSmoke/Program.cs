@@ -13,8 +13,18 @@ internal static class Smoke
     private static readonly string Output = Path.Combine(AppContext.BaseDirectory, "smoke-output");
 
     [STAThread]
-    private static void Main()
+    private static void Main(string[] args)
     {
+        if (args.Length == 2 && args[0] == "--export-media")
+        {
+            Directory.CreateDirectory(args[1]);
+            foreach (var scene in new[] { ("clock-english.png", TextClockTheme.LANGUAGE.English, "#FFFFF9"), ("clock-swedish.png", TextClockTheme.LANGUAGE.Swedish, "#FFFFF9"), ("clock-warm.png", TextClockTheme.LANGUAGE.English, "#FFE1A6") })
+            {
+                using var image = TextClock.Render(new TextClockTheme { Language = scene.Item2, ActiveColor = scene.Item3, InactiveColor = "#616A77", ActiveFont = "Consolas", InactiveFont = "Consolas", ActiveFontSize = 27, InactiveFontSize = 27 }, new Size(720, 720), new DateTime(2026, 11, 3, 10, 25, 0));
+                image.Save(Path.Combine(args[1], scene.Item1));
+            }
+            return;
+        }
         Directory.CreateDirectory(Output);
         Application.SetHighDpiMode(HighDpiMode.PerMonitorV2);
         Application.EnableVisualStyles();
@@ -104,6 +114,9 @@ internal static class Smoke
         using (var settings = new SettingsForm())
         {
             settings.Show(); Application.DoEvents();
+            var settingsTabs = settings.Controls.OfType<TableLayoutPanel>().Single().Controls.OfType<TabControl>().Single();
+            settingsTabs.SelectedIndex = 1;
+            Application.DoEvents();
             Console.WriteLine($"SETTINGS DPI={settings.DeviceDpi} Font={settings.Font.SizeInPoints} Height={settings.Font.Height} Size={settings.Size}");
             var language = (ComboBox)typeof(SettingsForm).GetField("language", Hidden)!.GetValue(settings)!;
             language.SelectedItem = "English";

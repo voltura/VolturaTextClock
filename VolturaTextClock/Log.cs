@@ -84,14 +84,14 @@ namespace VolturaTextClock
                 FileInfo fi = new FileInfo(logFileFullPath);
                 if (fi.Exists)
                 {
-                    int trimSize = AppConfig.GetValue("logFileSizeMB", 10) * 1024 * 1024;
+                    int trimSize = Math.Clamp(AppConfig.GetValue("logFileSizeMB", 10), 1, 100) * 1024 * 1024;
                     if (fi.Length > trimSize)
                     {
                         using MemoryStream ms = new MemoryStream(trimSize);
                         using FileStream s = new FileStream(logFileFullPath, FileMode.Open, FileAccess.ReadWrite);
                         s.Seek(-trimSize, SeekOrigin.End);
                         byte[] bytes = new byte[trimSize];
-                        s.Read(bytes, 0, trimSize);
+                        s.ReadExactly(bytes, 0, trimSize);
                         ms.Write(bytes, 0, trimSize);
                         ms.Position = 0;
                         s.SetLength(trimSize);
@@ -167,7 +167,6 @@ namespace VolturaTextClock
         /// </summary>
         internal static Exception Error
         {
-            private get => new ArgumentNullException(logFile);
             set
             {
                 try

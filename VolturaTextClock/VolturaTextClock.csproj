@@ -1,23 +1,22 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
+    <ImplicitUsings>enable</ImplicitUsings>
     <TargetFramework>net10.0-windows</TargetFramework>
     <UseWindowsForms>true</UseWindowsForms>
     <RootNamespace>VolturaTextClock</RootNamespace>
+    <Title>Voltura TextClock</Title>
     <StartupObject>VolturaTextClock.Program</StartupObject>
     <Authors>Joakim Skoglund</Authors>
     <Company>Voltura AB</Company>
     <Description>A Windows app that displays time as text</Description>
-    <Copyright>Copyright 2022 Voltura AB</Copyright>
     <ApplicationIcon>VolturaTextClock.ico</ApplicationIcon>
     <EnableNETAnalyzers>true</EnableNETAnalyzers>
     <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
-    <Version>1.0.8</Version>
     <ApplicationManifest>Properties\app.manifest</ApplicationManifest>
     <PackageIcon></PackageIcon>
     <SignAssembly>false</SignAssembly>
-    <AssemblyOriginatorKeyFile>VolturaTextClock.snk.pfx</AssemblyOriginatorKeyFile>
     <NeutralLanguage>en</NeutralLanguage>
   </PropertyGroup>
 
@@ -32,6 +31,7 @@
 		<SupportedPlatform Include="windows" />
 	</ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Updates/update-signing-public.pem" />
     <Compile Remove="Image\**" />
     <EmbeddedResource Remove="Image\**" />
     <None Remove="Image\**" />
@@ -48,9 +48,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.Extensions.Configuration" Version="10.0.1" />
-    <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="10.0.1" />
-    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+    <PackageReference Include="Microsoft.Extensions.Configuration" Version="10.0.14" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="10.0.14" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.4" />
   </ItemGroup>
 
   <ItemGroup>
