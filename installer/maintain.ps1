@@ -288,13 +288,23 @@ function Complete-Removal([string]$removalPath)
             } finally { [void][Runtime.InteropServices.Marshal]::FinalReleaseComObject($shell) }
         }
 
-        $run = 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Run'
+        $run = [Microsoft.Win32.Registry]::CurrentUser.OpenSubKey(
+            'Software\Microsoft\Windows\CurrentVersion\Run', $true)
         $expectedCommand = '"' + (Join-Path $target 'VolturaTextClock.exe') + '"'
-        $entry = Get-ItemPropertyValue -Path $run -Name 'VolturaTextClock' -ErrorAction SilentlyContinue
 
-        if ($entry -eq $expectedCommand)
+        if ($run)
         {
-            Remove-ItemProperty -Path $run -Name 'VolturaTextClock'
+            try
+            {
+                if ($run.GetValue('VolturaTextClock') -eq $expectedCommand)
+                {
+                    $run.DeleteValue('VolturaTextClock', $false)
+                }
+            }
+            finally
+            {
+                $run.Dispose()
+            }
         }
     }
 }

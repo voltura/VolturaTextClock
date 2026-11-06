@@ -40,10 +40,29 @@ try {
     if (-not $uninstall.WaitForExit(120000)) { throw 'Uninstall timed out.' }
     $result.uninstallLauncherExit = $uninstall.ExitCode
     $deadline = [DateTime]::UtcNow.AddSeconds(180)
-    while (((Test-Path -LiteralPath $target) -or (Test-Path 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Uninstall\VolturaTextClock')) -and [DateTime]::UtcNow -lt $deadline) { Start-Sleep -Milliseconds 500 }
-    if ((Test-Path -LiteralPath $target) -or (Test-Path 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Uninstall\VolturaTextClock')) { throw 'Uninstall did not remove the installation.' }
+    $base = Split-Path -Parent $target
+    $journal = Join-Path $base '.VolturaTextClock-maintenance\journal.json'
+    while (((Test-Path -LiteralPath $target) -or (Test-Path -LiteralPath $journal) -or (Test-Path 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Uninstall\VolturaTextClock')) -and [DateTime]::UtcNow -lt $deadline) { Start-Sleep -Milliseconds 500 }
+    if ((Test-Path -LiteralPath $target) -or (Test-Path -LiteralPath $journal) -or (Test-Path 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Uninstall\VolturaTextClock')) { throw 'Uninstall did not finish.' }
     if ([IO.File]::ReadAllText($settings) -ne $before) { throw 'Uninstall removed user settings.' }
     $result.checks += 'Uninstall removed owned installation and retained settings'
+
+    # Replay an interrupted uninstall after its files and startup value are gone.
+    $pendingRemoval = @{
+        Mode = 'Uninstall'
+        Phase = 'Removing'
+        Stage = Join-Path $base ('.VolturaTextClock-stage-' + [Guid]::NewGuid().ToString('N'))
+        Backup = Join-Path $base ('.VolturaTextClock-backup-' + [Guid]::NewGuid().ToString('N'))
+        HadPrevious = $true
+        PreviousVariant = 'standard'
+    }
+    [IO.File]::WriteAllText($journal, ($pendingRemoval | ConvertTo-Json))
+    $recovery = Start-Process -FilePath 'C:\TextClockInput\setup.exe' -ArgumentList '/S' -PassThru -WindowStyle Hidden
+    if (-not $recovery.WaitForExit(300000) -or $recovery.ExitCode -ne 0 -or
+        (Test-Path -LiteralPath $journal) -or -not (Test-Path -LiteralPath (Join-Path $target 'VolturaTextClock.exe'))) {
+        throw 'Setup did not recover the interrupted uninstall.'
+    }
+    $result.checks += 'Setup recovered an interrupted uninstall with no startup entry'
     $result.passed = $true
 } catch {
     $result.error = $_.Exception.ToString()
