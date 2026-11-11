@@ -7,11 +7,15 @@ if ($key.StartsWith($root + [IO.Path]::DirectorySeparatorChar, [StringComparison
 Add-Type -AssemblyName System.Security
 $private = [Security.Cryptography.ProtectedData]::Unprotect([IO.File]::ReadAllBytes($key), $null, [Security.Cryptography.DataProtectionScope]::CurrentUser)
 $rsa = [Security.Cryptography.RSA]::Create()
+$publicKey = [Security.Cryptography.RSA]::Create()
 try {
     $read = 0
     $rsa.ImportPkcs8PrivateKey($private, [ref]$read)
     $public = [IO.File]::ReadAllText((Join-Path $root 'VolturaTextClock/Updates/update-signing-public.pem'))
-    if ($rsa.ExportSubjectPublicKeyInfoPem().Trim() -cne $public.Trim()) { throw 'Signing key does not match the embedded public key.' }
+    $publicKey.ImportFromPem($public)
+    $signer = [Convert]::ToBase64String($rsa.ExportSubjectPublicKeyInfo())
+    $embedded = [Convert]::ToBase64String($publicKey.ExportSubjectPublicKeyInfo())
+    if ($signer -cne $embedded) { throw 'Signing key does not match the embedded public key.' }
     [xml]$metadata = Get-Content (Join-Path $root 'Directory.Build.props')
     $version = [string]$metadata.Project.PropertyGroup.Version
     $publish = Join-Path $root 'artifacts/publish'
@@ -23,4 +27,4 @@ try {
     $signature = $rsa.SignData($manifest, [Security.Cryptography.HashAlgorithmName]::SHA256, [Security.Cryptography.RSASignaturePadding]::Pss)
     [IO.File]::WriteAllBytes((Join-Path $publish "VolturaTextClock-Update-$version.json"), $manifest)
     [IO.File]::WriteAllBytes((Join-Path $publish "VolturaTextClock-Update-$version.sig"), $signature)
-} finally { [Array]::Clear($private, 0, $private.Length); $rsa.Dispose() }
+} finally { [Array]::Clear($private, 0, $private.Length); $rsa.Dispose(); $publicKey.Dispose() }

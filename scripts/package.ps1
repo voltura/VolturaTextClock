@@ -1,5 +1,5 @@
 #Requires -Version 7.0
-param([switch]$SkipChecks, [string]$SigningConfig = (Join-Path $env:LOCALAPPDATA 'Voltura/Markdown/Signing/signing.json'), [switch]$Unsigned)
+param([switch]$SkipChecks, [string]$SigningConfig = (Join-Path $PSScriptRoot 'signing.json'), [switch]$Unsigned)
 $ErrorActionPreference = 'Stop'
 $root = Split-Path $PSScriptRoot -Parent
 Push-Location $root
@@ -9,10 +9,18 @@ try {
     if ($version -cnotmatch '^\d+\.\d+\.\d+$') { throw 'Use a stable three-part version.' }
     $nsis = Join-Path ${env:ProgramFiles(x86)} 'NSIS/makensis.exe'
     if (-not (Test-Path -LiteralPath $nsis)) { throw 'NSIS is required.' }
-    $signing = if (-not $Unsigned) { Get-Content -LiteralPath $SigningConfig -Raw | ConvertFrom-Json }
+    if (-not $Unsigned) {
+        $signing = Get-Content -LiteralPath $SigningConfig -Raw | ConvertFrom-Json
+        $signingArguments = @{
+            CertificateThumbprint = $signing.certificateThumbprint
+            TimestampUrl = $signing.timestampUrl
+            AllowSelfSigned = $signing.allowSelfSigned -eq $true
+        }
+        & "$PSScriptRoot/sign.ps1" -Path 'preflight.exe' -ValidateOnly @signingArguments
+    }
     function Sign-Executable([string]$path) {
-        if ($signing) {
-            & "$PSScriptRoot/sign.ps1" -Path $path -CertificateThumbprint $signing.certificateThumbprint -TimestampUrl $signing.timestampUrl -AllowSelfSigned:([bool]$signing.allowSelfSigned)
+        if (-not $Unsigned) {
+            & "$PSScriptRoot/sign.ps1" -Path $path @signingArguments
         }
     }
     function Reset-Payload([string]$name) {
